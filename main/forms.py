@@ -7,3 +7,6 @@ class uploadFileForm(forms.ModelForm):
     class Meta:
         model = uploadModel
         fields = ('file',)
+        widgets = {
+            'file': forms.ClearableFileInput(attrs={"multiple": True})
+        }
