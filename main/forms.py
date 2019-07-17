@@ -1,12 +1,12 @@
 from django import forms
 
-from .models import UploadModel
+from .models import UploadFiles
 
 
 class UploadFileForm(forms.ModelForm):
     class Meta:
-        model = UploadModel
-        fields = ('file', 'duration')
+        model = UploadFiles
+        fields = ('file', 'expires_at', 'password')
         widgets = {
             'file': forms.ClearableFileInput(attrs={"multiple": True})
         }
