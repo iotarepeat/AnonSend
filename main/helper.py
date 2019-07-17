@@ -1,6 +1,9 @@
+import os
+import pickle
 import string
+from datetime import datetime
 from hashlib import sha1
-from random import choices, randint
+from random import shuffle
 
 
 def get_hash(file_stream):
@@ -10,6 +13,23 @@ def get_hash(file_stream):
     return hash_algo.hexdigest()
 
 
-def gen_link(a=6, b=12):
-    base62_list = list(string.digits + string.ascii_letters)
-    return ''.join(choices(base62_list, k=randint(a, b)))
+def gen_base62():
+    base62 = list(string.digits + string.ascii_letters)
+    shuffle(base62)
+    dict_62 = {str(i).zfill(2): base62[i] for i in range(62)}
+    for i in range(62, 100):
+        dict_62[str(i)] = base62[i // 10] + base62[i % 10]
+    with open("base62_dict.pkl", "wb") as f:
+        pickle.dump(dict_62, f)
+
+
+def gen_link():
+    if not os.path.exists("base62_dict.pkl"):
+        gen_base62()
+    with open("base62_dict.pkl", 'rb') as f:
+        base62 = pickle.load(f)
+    current_timestamp = str(datetime.timestamp(datetime.now())).replace(".", "")
+    link = [base62[current_timestamp[i:i + 2].zfill(2)] for i in range(0, len(current_timestamp), 2)]
+    shuffle(link)
+    link = "".join(link)
+    return link
