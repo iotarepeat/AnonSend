@@ -23,6 +23,20 @@ def gen_base62():
         pickle.dump(dict_62, f)
 
 
+def gen_analytic_link():
+    if not os.path.exists("base62_dict.pkl"):
+        gen_base62()
+    with open("base62_dict.pkl", 'rb') as f:
+        base62 = pickle.load(f)
+    current_timestamp = str(datetime.timestamp(datetime.now())).replace(".", "")
+    shuffle(list(current_timestamp))
+    current_timestamp = "".join(current_timestamp)
+    link = [base62[current_timestamp[i:i + 2].zfill(2)] for i in range(0, len(current_timestamp), 2)]
+    shuffle(link)
+    link = "".join(link)
+    return link
+
+
 def gen_link():
     if not os.path.exists("base62_dict.pkl"):
         gen_base62()
