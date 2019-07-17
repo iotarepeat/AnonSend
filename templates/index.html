@@ -5,10 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data" action="upload_success">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" value="Submit"/>
+    <input type="submit" value="Upload"/>
 </form>
 
 </body>

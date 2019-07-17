@@ -21,8 +21,8 @@ DATE_CHOICES = [
 class UploadFiles(models.Model):
     expires_at = models.DateTimeField(verbose_name="Expires in", choices=DATE_CHOICES, default=get_today())
     file = models.FileField(upload_to="uploaded_files/")
-    public_link = models.CharField(max_length=15, unique=True, )
-    analytic_link = models.CharField(max_length=15, primary_key=True, )
+    public_link = models.CharField(max_length=15, unique=True, primary_key=True)
+    analytic_link = models.CharField(max_length=15)
     password = models.CharField(max_length=41, blank=True)
     file_hash = models.CharField(max_length=41, )
     file_name = models.CharField(max_length=40)

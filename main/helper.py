@@ -7,10 +7,10 @@ from random import shuffle
 
 
 def get_hash(file_stream):
-    hash_algo = sha1()
+    hash_algorithm = sha1()
     for chunk in file_stream.chunks():
-        hash_algo.update(chunk)
-    return hash_algo.hexdigest()
+        hash_algorithm.update(chunk)
+    return hash_algorithm.hexdigest()
 
 
 def gen_base62():
