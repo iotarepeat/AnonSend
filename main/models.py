@@ -28,3 +28,17 @@ class UploadFiles(models.Model):
     password = models.CharField(max_length=41, blank=True)
     file_hash = models.CharField(max_length=41, )
     file_name = models.CharField(max_length=40)
+
+
+class Analytics(models.Model):
+    upload_file = models.ForeignKey(UploadFiles, on_delete=models.CASCADE)
+
+    os = models.CharField(max_length=40, default="Unknown")
+    device_type = models.CharField(max_length=40, default="Unknown")
+    browser = models.CharField(max_length=40, default="Unknown")
+
+    country = models.CharField(max_length=40, default="Unknown")
+    region = models.CharField(max_length=40, default="Unknown")
+    city = models.CharField(max_length=40, default="Unknown")
+
+    time_clicked = models.DateTimeField(auto_now_add=True)

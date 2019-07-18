@@ -1,9 +1,41 @@
+import json
 import os
 import pickle
 import string
+import urllib.request
 from datetime import datetime
 from hashlib import sha1
 from random import shuffle
+
+import user_agents
+
+
+def get_analytics(request):
+    # Ip address
+    try:
+        ip_address = request.META['REMOTE_ADDR']
+        response = urllib.request.urlopen('http://ip-api.com/json/' + ip_address)
+        ip_info = json.loads(response.read())
+        country = ip_info["country"]
+        region = ip_info["regionName"]
+        city = ip_info["city"]
+    except KeyError or urllib.request.HTTPError:
+        country = "Unknown"
+        region = "Unknown"
+        city = "Unknown"
+
+    # User Agent
+    ua = user_agents.parse(request.META.get('HTTP_USER_AGENT', ''))
+    device_type = "Unknown"
+    if ua.is_mobile:
+        device_type = "Mobile"
+    elif ua.is_tablet:
+        device_type = "Tablet"
+    elif ua.is_pc:
+        device_type = "Personal Computer"
+
+    return {"os": ua.os.family, "device_type": device_type, "browser": ua.browser.family, "region": region,
+            "country": country, "city": city}
 
 
 def get_hash(file_stream):

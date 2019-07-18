@@ -1,5 +1,41 @@
 <html>
 <body>
+<h1>Chart Data</h1>
+<dl>
+    {% for type,data in chart_data.items %}
+        <dt><em> {{ res }}</em></dt>
+        <dd>
+            <ul>
+                <li>
+                    {% for name,count in data %}
+                        {{ name }} - {{ count }}
+                    {% endfor %}
+                </li>
+            </ul>
+        </dd>
+    {% endfor %}
+</dl>
+<h1>Detailed Date</h1>
+<table border="1">
+    <tr>
+        <th>OS</th>
+        <th>DEVICE_TYPE</th>
+        <th>BROWSER</th>
+        <th>COUNTRY</th>
+        <th>REGION</th>
+        <th>CITY</th>
+        <th>TIME_CLICKED</th>
+    </tr>
+    {% for items in detailed %}
+        <tr>
+            {% for i in items %}
+                <td>
 
+                    {{ i }}
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
 </body>
 </html>
