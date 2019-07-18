@@ -4,7 +4,7 @@ from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
 
 from .forms import UploadFileForm
-from .helper import gen_link, gen_analytic_link, get_hash
+from .helper import get_hash
 from .models import UploadFiles
 
 
@@ -20,10 +20,8 @@ def uploaded_link(request):
 
             # TODO: Zip Archive multiple files
             for file in request.FILES.getlist('file'):
-                model = UploadFiles(file=file, file_name=file.name, file_hash=get_hash(file), public_link=gen_link(),
-                                    analytic_link=gen_analytic_link()
-                                    , expires_at=form.cleaned_data['expires_at'])
-
+                model = UploadFiles(file=file, file_name=file.name, file_hash=get_hash(file),
+                                    expires_at=form.cleaned_data['expires_at'])
                 # Check for same file with hash
                 query_set = UploadFiles.objects.all().filter(file_hash=model.file_hash)
                 if query_set.exists():
@@ -50,6 +48,17 @@ def public_link_handle(request, public_link):
     if query.exists():
         if query.first().expires_at.timestamp() > datetime.now().timestamp():
             return FileResponse(query.first().file, as_attachment=True)
+        else:
+            raise Http404()
+    else:
+        raise Http404()
+
+
+def analytic_link_handle(request, analytic_link):
+    query = UploadFiles.objects.all().filter(analytic_link=analytic_link)
+    if query.exists():
+        if query.first().expires_at.timestamp() > datetime.now().timestamp():
+            return render(request, 'analytics.html')
         else:
             raise Http404()
     else:
