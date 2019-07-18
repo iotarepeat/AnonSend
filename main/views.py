@@ -4,6 +4,7 @@ from django.shortcuts import render
 from main.helper import get_hash, gen_link
 from .forms import UploadFileForm
 from .models import UploadModel
+from django.views.generic import View
 
 
 # Create your views here.
@@ -25,3 +26,6 @@ def index(request):
     else:
         form = UploadFileForm()
         return render(request, 'index.html', {"form": form})
+
+def upload(request):
+        return render(request, "upload.html")
