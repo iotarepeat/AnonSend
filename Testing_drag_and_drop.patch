@@ -1,0 +1,124 @@
+Index: main/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- main/urls.py	(revision a00ee174d6cd283e10161e118c06f5df71bf26d1)
++++ main/urls.py	(date 1563386990365)
+@@ -1,5 +1,7 @@
+-from django.urls import path
+-
++from django.urls import path, include
++from django.views.generic import TemplateView
++from django.conf.urls import url
+ from . import views
+ 
+-urlpatterns = [path('', views.index, name="index")]
++urlpatterns = [path('', views.index, name="index"),
++               path('upload.html', views.upload, name='upload')]
+Index: main/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- main/views.py	(revision a00ee174d6cd283e10161e118c06f5df71bf26d1)
++++ main/views.py	(date 1563386748775)
+@@ -4,6 +4,7 @@
+ from main.helper import get_hash, gen_link
+ from .forms import UploadFileForm
+ from .models import UploadModel
++from django.views.generic import View
+ 
+ 
+ # Create your views here.
+@@ -25,3 +26,6 @@
+     else:
+         form = UploadFileForm()
+         return render(request, 'index.html', {"form": form})
++
++def upload(request):
++        return render(request, "upload.html")
+\ No newline at end of file
+Index: AnonSend/settings.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- AnonSend/settings.py	(revision a00ee174d6cd283e10161e118c06f5df71bf26d1)
++++ AnonSend/settings.py	(date 1563387330141)
+@@ -54,7 +54,8 @@
+ TEMPLATES = [
+     {
+         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
++        'DIRS': [os.path.join(BASE_DIR, 'templates'),
++                 ]
+         ,
+         'APP_DIRS': True,
+         'OPTIONS': {
+@@ -117,5 +118,8 @@
+ 
+ # Static files (CSS, JavaScript, Images)
+ # https://docs.djangoproject.com/en/2.2/howto/static-files/
+-
++STATICFILES_DIRS = (
++     os.path.join(BASE_DIR, 'static'),
++)
++STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
+ STATIC_URL = '/static/'
+Index: AnonSend/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- AnonSend/urls.py	(revision a00ee174d6cd283e10161e118c06f5df71bf26d1)
++++ AnonSend/urls.py	(date 1563384905014)
+@@ -19,4 +19,5 @@
+ 
+ urlpatterns = [
+    path('', include('main.urls')),
++
+ ]
+Index: .idea/dataSources.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/dataSources.xml	(date 1563383799990)
++++ .idea/dataSources.xml	(date 1563383799990)
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
++    <data-source source="LOCAL" name="db" uuid="5d48480f-ce57-45b7-bcb1-9cfb3f895e38">
++      <driver-ref>sqlite.xerial</driver-ref>
++      <synchronize>true</synchronize>
++      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
++      <jdbc-url>jdbc:sqlite:C:\Users\User\PycharmProjects\AnonSend\db.sqlite3</jdbc-url>
++      <driver-properties>
++        <property name="enable_load_extension" value="true" />
++      </driver-properties>
++    </data-source>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/AnonSend.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/AnonSend.iml	(revision a00ee174d6cd283e10161e118c06f5df71bf26d1)
++++ .idea/AnonSend.iml	(date 1563385656877)
+@@ -1,8 +1,10 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <module type="PYTHON_MODULE" version="4">
+   <component name="NewModuleRootManager">
+-    <content url="file://$MODULE_DIR$" />
+-    <orderEntry type="inheritedJdk" />
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/venv" />
++    </content>
++    <orderEntry type="jdk" jdkName="Python 3.7" jdkType="Python SDK" />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
+   <component name="TestRunnerService">
