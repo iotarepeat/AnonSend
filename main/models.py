@@ -28,6 +28,7 @@ class UploadFiles(models.Model):
     password = models.CharField(max_length=41, blank=True)
     file_hash = models.CharField(max_length=41, )
     file_name = models.CharField(max_length=40)
+    max_downloads = models.PositiveSmallIntegerField(default=1, choices=[(i, i) for i in range(1, 11)])
 
 
 class Analytics(models.Model):

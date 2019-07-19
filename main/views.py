@@ -22,7 +22,8 @@ def uploaded_link(request):
             # TODO: Zip Archive multiple files
             for file in request.FILES.getlist('file'):
                 model = UploadFiles(file=file, file_name=file.name, file_hash=get_hash(file),
-                                    expires_at=form.cleaned_data['expires_at'])
+                                    expires_at=form.cleaned_data['expires_at'],
+                                    max_downloads=form.cleaned_data['max_downloads'])
                 # Check for same file with hash
                 query_set = UploadFiles.objects.all().filter(file_hash=model.file_hash)
                 if query_set.exists():
@@ -40,16 +41,19 @@ def uploaded_link(request):
                           {"public_link": model.public_link, "analytic_link": model.analytic_link})
         else:
             # Form is invalid
-            raise Http404()
+            return redirect(index)
+
     else:
         # Request is not post
-        redirect('')
+        return redirect(index)
 
 
 def public_link_handle(request, public_link):
     query = UploadFiles.objects.all().filter(public_link=public_link)
     if query.exists():
-        if query.first().expires_at.timestamp() > datetime.now().timestamp():
+        upload_file = query.first()
+        if len(Analytics.objects.filter(
+                upload_file=upload_file)) < upload_file.max_downloads and upload_file.expires_at.timestamp() > datetime.now().timestamp():
             results = get_analytics(request)
             Analytics(upload_file_id=public_link, **results).save()
             # TODO: Add password support
