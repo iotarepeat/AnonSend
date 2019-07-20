@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+{% for message in messages %}
+    <div class=" alert alert-success">
+        <a class=" close" href="#" data-dismiss="alert">x</a>
+
+        {{ message }}
+
+    </div>
+{% endfor %}
+<form method="post">
+    {% csrf_token %}
+    {% if visible %}
+        {{ form }}
+    {% endif %}
+    <input type="submit" value="Download"/>
+</form>
+</body>
+</html>

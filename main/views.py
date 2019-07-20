@@ -1,11 +1,12 @@
 from collections import Counter
 from datetime import datetime
 
+from django.contrib import messages
 from django.core.files.uploadedfile import UploadedFile
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
 
-from .forms import UploadFileForm
+from .forms import UploadFileForm, PasswordForm
 from .helper import get_analytics, compress_to_zip, get_hash
 from .models import UploadFiles, Analytics
 
@@ -24,6 +25,7 @@ def uploaded_link(request):
             else:
                 file = request.FILES['file']
             model = UploadFiles(file=file, file_name=file.name, file_hash=get_hash(file),
+                                password=form.cleaned_data['password'],
                                 expires_at=form.cleaned_data['expires_at'],
                                 max_downloads=form.cleaned_data['max_downloads'])
             # Check for same file with hash
@@ -53,16 +55,23 @@ def public_link_handle(request, public_link):
     query = UploadFiles.objects.all().filter(public_link=public_link)
     if query.exists():
         upload_file = query.first()
-        if len(Analytics.objects.filter(
-                upload_file=upload_file)) < upload_file.max_downloads and upload_file.expires_at.timestamp() > datetime.now().timestamp():
-            results = get_analytics(request)
-            Analytics(upload_file_id=public_link, **results).save()
-            # TODO: Add password support
-            return FileResponse(query.first().file, as_attachment=True, filename=query.first().file_name)
-        else:
-            raise Http404()
+        visibility = upload_file.password != ''
     else:
+        # File expired or does not exist
         raise Http404()
+    if request.method == "POST":
+        form = PasswordForm(request.POST)
+
+        if form.is_valid():
+            if len(Analytics.objects.filter(
+                    upload_file=upload_file)) < upload_file.max_downloads and upload_file.expires_at.timestamp() > datetime.now().timestamp():
+                if form.cleaned_data['password'] != upload_file.password:
+                    messages.error(request, "Invalid password")
+                    return render(request, 'public_link.html', {"visible": visibility, "form": PasswordForm()})
+                results = get_analytics(request)
+                Analytics(upload_file_id=public_link, **results).save()
+                return FileResponse(query.first().file, as_attachment=True, filename=query.first().file_name)
+    return render(request, 'public_link.html', {"visible": visibility, "form": PasswordForm()})
 
 
 def analytic_link_handle(request, analytic_link):
