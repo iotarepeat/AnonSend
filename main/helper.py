@@ -59,20 +59,21 @@ def get_hash(file_stream):
     return hash_algorithm.hexdigest()
 
 
-def gen_base62():
+def gen_base62(name):
     base62 = list(string.digits + string.ascii_letters)
     shuffle(base62)
     dict_62 = {str(i).zfill(2): base62[i] for i in range(62)}
     for i in range(62, 100):
         dict_62[str(i)] = base62[i // 10] + base62[i % 10]
-    with open("base62_dict.pkl", "wb") as f:
+    with open(name, "wb") as f:
         pickle.dump(dict_62, f)
 
 
 def gen_analytic_link():
-    if not os.path.exists("base62_dict.pkl"):
-        gen_base62()
-    with open("base62_dict.pkl", 'rb') as f:
+    name = "base62_analytic_dict.pkl"
+    if not os.path.exists(name):
+        gen_base62(name)
+    with open(name, 'rb') as f:
         base62 = pickle.load(f)
     current_timestamp = str(datetime.timestamp(datetime.now())).replace(".", "")
     shuffle(list(current_timestamp))
@@ -84,9 +85,10 @@ def gen_analytic_link():
 
 
 def gen_link():
-    if not os.path.exists("base62_dict.pkl"):
-        gen_base62()
-    with open("base62_dict.pkl", 'rb') as f:
+    name = "base62_public_dict.pkl"
+    if not os.path.exists(name):
+        gen_base62(name)
+    with open(name, 'rb') as f:
         base62 = pickle.load(f)
     current_timestamp = str(datetime.timestamp(datetime.now())).replace(".", "")
     link = [base62[current_timestamp[i:i + 2].zfill(2)] for i in range(0, len(current_timestamp), 2)]
