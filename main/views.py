@@ -1,11 +1,12 @@
 from collections import Counter
 from datetime import datetime
 
+from django.core.files.uploadedfile import UploadedFile
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
 
 from .forms import UploadFileForm
-from .helper import get_hash, get_analytics
+from .helper import get_analytics, compress_to_zip, get_hash
 from .models import UploadFiles, Analytics
 
 
@@ -18,25 +19,25 @@ def uploaded_link(request):
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-
-            # TODO: Zip Archive multiple files
-            for file in request.FILES.getlist('file'):
-                model = UploadFiles(file=file, file_name=file.name, file_hash=get_hash(file),
-                                    expires_at=form.cleaned_data['expires_at'],
-                                    max_downloads=form.cleaned_data['max_downloads'])
-                # Check for same file with hash
-                query_set = UploadFiles.objects.all().filter(file_hash=model.file_hash)
-                if query_set.exists():
-                    model.file = query_set.first().file
-                else:
-                    name = file.name
-                    name = name.split("/")
-                    name.insert(0, model.file_hash)
-                    name = "/".join(name)
-                    model.file.save(name, file)
-                # noinspection PyArgumentList,PyArgumentList
-                model.save()
-            # noinspection PyUnboundLocalVariable
+            if len(request.FILES.getlist('file')) > 1:
+                file = UploadedFile(**compress_to_zip(request.FILES.getlist('file')))
+            else:
+                file = request.FILES['file']
+            model = UploadFiles(file=file, file_name=file.name, file_hash=get_hash(file),
+                                expires_at=form.cleaned_data['expires_at'],
+                                max_downloads=form.cleaned_data['max_downloads'])
+            # Check for same file with hash
+            query_set = UploadFiles.objects.all().filter(file_hash=model.file_hash)
+            if query_set.exists():
+                model.file = query_set.first().file
+            else:
+                name = file.name
+                name = name.split("/")
+                name.insert(0, model.file_hash)
+                name = "/".join(name)
+                model.file.save(name, file)
+            # noinspection PyArgumentList,PyArgumentList
+            model.save()
             return render(request, 'upload_success.html',
                           {"public_link": model.public_link, "analytic_link": model.analytic_link})
         else:

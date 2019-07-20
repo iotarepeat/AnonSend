@@ -6,8 +6,22 @@ import urllib.request
 from datetime import datetime
 from hashlib import sha1
 from random import shuffle
+from zipfile import ZipFile
 
 import user_agents
+
+
+def compress_to_zip(files):
+    zip_file = ZipFile('tmp.zip', "w")
+    for f in files:
+        zip_file.writestr(f.name, f.read())
+
+    zip_file.close()
+    try:
+        return {"name": "anonSend.zip", "file": open('tmp.zip', 'rb'), "content_type": "application/zip",
+                "size": os.path.getsize("/tmp/anonSend.zip"), "charset": "utf-8"}
+    finally:
+        os.remove('tmp.zip')
 
 
 def get_analytics(request):
