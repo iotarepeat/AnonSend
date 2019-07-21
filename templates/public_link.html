@@ -12,12 +12,12 @@
 
     </div>
 {% endfor %}
-<form method="post">
+<form method="post" onsubmit="document.getElementById('submit').disabled=true;">
     {% csrf_token %}
     {% if visible %}
         {{ form }}
     {% endif %}
-    <input type="submit" value="Download"/>
+    <input type="submit" value="Download" id="submit"/>
 </form>
 </body>
 </html>

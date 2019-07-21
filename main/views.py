@@ -71,6 +71,8 @@ def public_link_handle(request, public_link):
                 results = get_analytics(request)
                 Analytics(upload_file_id=public_link, **results).save()
                 return FileResponse(query.first().file, as_attachment=True, filename=query.first().file_name)
+            else:
+                query.delete()
     return render(request, 'public_link.html', {"visible": visibility, "form": PasswordForm()})
 
 
