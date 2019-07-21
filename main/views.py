@@ -89,6 +89,6 @@ def analytic_link_handle(request, analytic_link):
                 results.values_list('os', 'device_type', 'browser', 'country', 'region', 'city', 'time_clicked'))
             return render(request, 'analytics.html', {"chart_data": chart_data, "detailed": detailed})
         else:
-            raise Http404()
+            raise render(request, 'analytics.html')
     else:
         raise Http404()
