@@ -19,7 +19,7 @@ def compress_to_zip(files):
     zip_file.close()
     try:
         return {"name": "anonSend.zip", "file": open('tmp.zip', 'rb'), "content_type": "application/zip",
-                "size": os.path.getsize("/tmp/anonSend.zip"), "charset": "utf-8"}
+                "size": os.path.getsize('tmp.zip'), "charset": "utf-8"}
     finally:
         os.remove('tmp.zip')
 
