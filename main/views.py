@@ -4,7 +4,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.core.files.uploadedfile import UploadedFile
 from django.http import FileResponse, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import UploadFileForm, PasswordForm
 from .helper import get_analytics, compress_to_zip, get_hash
@@ -52,13 +52,8 @@ def uploaded_link(request):
 
 
 def public_link_handle(request, public_link):
-    query = UploadFiles.objects.all().filter(public_link=public_link)
-    if query.exists():
-        upload_file = query.first()
-        visibility = upload_file.password != ''
-    else:
-        # File expired or does not exist
-        raise Http404()
+    upload_file = get_object_or_404(UploadFiles, pk=public_link)
+    visibility = upload_file.password != ""
     if request.method == "POST":
         form = PasswordForm(request.POST)
 
@@ -68,27 +63,25 @@ def public_link_handle(request, public_link):
                 if form.cleaned_data['password'] != upload_file.password:
                     messages.error(request, "Invalid password")
                     return render(request, 'public_link.html', {"visible": visibility, "form": PasswordForm()})
-                results = get_analytics(request)
+                results = get_analytics(request.META)
                 Analytics(upload_file_id=public_link, **results).save()
-                return FileResponse(query.first().file, as_attachment=True, filename=query.first().file_name)
+                return FileResponse(upload_file.file, as_attachment=True, filename=upload_file.file_name)
             else:
-                query.delete()
+                # File expired
+                raise Http404()
     return render(request, 'public_link.html', {"visible": visibility, "form": PasswordForm()})
 
 
 def analytic_link_handle(request, analytic_link):
     query = UploadFiles.objects.all().filter(analytic_link=analytic_link)
-    if query.exists():
-        if query.first().expires_at.timestamp() > datetime.now().timestamp():
-            results = Analytics.objects.filter(upload_file=query.first())
-            chart_data = {}
-            chart_attributes = ['os', 'device_type', 'browser']
-            for data in chart_attributes:
-                chart_data[data] = Counter([i[0] for i in list(results.values_list(data))]).items()
-            detailed = list(
-                results.values_list('os', 'device_type', 'browser', 'country', 'region', 'city', 'time_clicked'))
-            return render(request, 'analytics.html', {"chart_data": chart_data, "detailed": detailed})
-        else:
-            raise render(request, 'analytics.html')
+    if query.exists() and query.first().expires_at.timestamp() > datetime.now().timestamp():
+        results = Analytics.objects.filter(upload_file=query.first())
+        chart_data = {}
+        chart_attributes = ['os', 'device_type', 'browser']
+        for data in chart_attributes:
+            chart_data[data] = Counter([i[0] for i in list(results.values_list(data))]).items()
+        detailed = list(
+            results.values_list('os', 'device_type', 'browser', 'country', 'region', 'city', 'time_clicked'))
+        return render(request, 'analytics.html', {"chart_data": chart_data, "detailed": detailed})
     else:
         raise Http404()

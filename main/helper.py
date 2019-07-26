@@ -24,22 +24,22 @@ def compress_to_zip(files):
         os.remove('tmp.zip')
 
 
-def get_analytics(request):
+def get_analytics(meta):
     # Ip address
     try:
-        ip_address = request.META['REMOTE_ADDR']
+        ip_address = meta['REMOTE_ADDR']
         response = urllib.request.urlopen('http://ip-api.com/json/' + ip_address)
         ip_info = json.loads(response.read())
         country = ip_info["country"]
         region = ip_info["regionName"]
         city = ip_info["city"]
-    except KeyError or urllib.request.HTTPError:
+    except:
         country = "Unknown"
         region = "Unknown"
         city = "Unknown"
 
     # User Agent
-    ua = user_agents.parse(request.META.get('HTTP_USER_AGENT', ''))
+    ua = user_agents.parse(meta.get('HTTP_USER_AGENT', ''))
     device_type = "Unknown"
     if ua.is_mobile:
         device_type = "Mobile"
