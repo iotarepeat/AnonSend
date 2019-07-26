@@ -12,8 +12,20 @@ from main.models import UploadFiles
 PROJECT_DIR = os.path.dirname(os.path.dirname(__file__))
 UPLOAD_FOLDER = 'uploaded_files'
 if __name__ == '__main__':
+    """
+        Intended to run at scheduled intervals by the OS
+        Removes unnecessary links in database:
+            - Links are removed on blackList basis
+            - All links with expiry < current_time are deleted
+        Remove unnecessary files and directories:
+            - Directories are deleted on whitelist basis
+            - All files that are currently active (expiry >= current time) are whitelisted
+            - Remaining files are deleted
+            - Finally delete all empty directories
+            
+    """
     os.chdir(PROJECT_DIR)
-    query = UploadFiles.objects.filter(expires_at__gt=datetime.now())
+    query = UploadFiles.objects.filter(expires_at__gte=datetime.now())
     whiteList = {x for i in
                  list(query.values_list('file')) for x in
                  i}

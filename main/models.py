@@ -6,6 +6,9 @@ from main.helper import gen_link, gen_analytic_link
 
 
 def get_today():
+    """
+    :return: Get current time and offset by 10 Minutes
+    """
     return datetime.datetime.now() + datetime.timedelta(minutes=10)
 
 
@@ -21,23 +24,30 @@ DATE_CHOICES = [
 
 # Create your models here.
 class UploadFiles(models.Model):
-    expires_at = models.DateTimeField(verbose_name="Expires in", choices=DATE_CHOICES, default=get_today)
-    file = models.FileField(upload_to="uploaded_files/")
+    # Uniquely random fields
     public_link = models.CharField(max_length=15, unique=True, primary_key=True, default=gen_link)
     analytic_link = models.CharField(max_length=15, default=gen_analytic_link)
+
+    # Form inputs
+    file = models.FileField(upload_to="uploaded_files/")
     password = models.CharField(max_length=41, blank=True)
+    expires_at = models.DateTimeField(verbose_name="Expires in", choices=DATE_CHOICES, default=get_today)
+    max_downloads = models.PositiveSmallIntegerField(default=1, choices=[(i, i) for i in range(1, 11)])
+
+    # Derived fields
     file_hash = models.CharField(max_length=41, )
     file_name = models.CharField(max_length=40)
-    max_downloads = models.PositiveSmallIntegerField(default=1, choices=[(i, i) for i in range(1, 11)])
 
 
 class Analytics(models.Model):
     upload_file = models.ForeignKey(UploadFiles, on_delete=models.CASCADE)
 
+    # From user-agent
     os = models.CharField(max_length=40, default="Unknown")
     device_type = models.CharField(max_length=40, default="Unknown")
     browser = models.CharField(max_length=40, default="Unknown")
 
+    # From ip
     country = models.CharField(max_length=40, default="Unknown")
     region = models.CharField(max_length=40, default="Unknown")
     city = models.CharField(max_length=40, default="Unknown")
