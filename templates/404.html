@@ -1,83 +1,22 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<title>404 Page</title>
-    <style>
-   body {
-          background-color: #F4F2F2;
-          color: #A09895;
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 1rem;
-          line-height: 1.5;
-        }
-
-        a {
-          color: #F78C25;
-          text-decoration: none;
-        }
-
-        a:hover {
-          color: #F37221;
-          text-decoration: underline;
-        }
-
-        main {
-          border-spacing: 1rem;
-          display: table;
-          margin: 6rem auto;
-          max-width: 37rem;
-          text-align: left;
-        }
-
-        main p:first-child {
-          font-size: 2rem;
-          font-weight: bold;
-          margin-top: 0;
-        }
-
-        .error-image {
-          display: table-cell;
-          width: 120px;
-        }
-
-        .error-text {
-          display: table-cell;
-          vertical-align: top;
-        }
-
-        .status-code {
-          font-size: 2em;
-          line-height: 0.75em;
-        }
-
-        .copyright {
-          color: #A09895;
-          font-size: 0.75em;
-          margin: 0 auto;
-          text-align: center;
-        }
-    </style>
-
+	<meta charset="utf-8">
+	<title>404</title>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-<main>
+
+	<div class="image">
+		<img src="img.jpg" >
+	</div>
+		<div class="notfound">
+			<h1>Page not found</h1>
+			<p>The resource you are looking for has expired or does not exist.</p>
+			<a href="#">GO TO HOMEPAGE</a>
+		</div>
 
 
-<div class="error-text">  <p>We have over <span class="status-code">404</span> pages</p>
-
-  <p>
-    but we were unable to find the page you were looking for.
-    Please return to the <a href="">Anosend Homepage</a>.
-  </p>
-</div>
-    </main>
-{% comment %}<h1>404</h1>
-<h3>Reason: {{ reason }}</h3>{% endcomment %}
 </body>
+
 </html>
