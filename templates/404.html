@@ -1,19 +1,20 @@
 <head>
 	<meta charset="utf-8">
 	<title>404</title>
+    {% load static %}
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900" rel="stylesheet">
-	<link type="text/css" rel="stylesheet" href="style.css" />
+    <link type="text/css" rel="stylesheet" href="{% static "404.css" %}"/>
 </head>
 
 <body>
 
 	<div class="image">
-		<img src="img.jpg" >
+        <img src="{% static "404.jpg" %}">
 	</div>
 		<div class="notfound">
 			<h1>Page not found</h1>
 			<p>The resource you are looking for has expired or does not exist.</p>
-			<a href="#">GO TO HOMEPAGE</a>
+            <a href="/">GO TO HOMEPAGE</a>
 		</div>
 
 
