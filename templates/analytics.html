@@ -1,41 +1,96 @@
+<!-- Styles -->
 <html>
-<body>
-<h1>Chart Data</h1>
-<dl>
-    {% for type,data in chart_data.items %}
-        <dt><em> {{ res }}</em></dt>
-        <dd>
-            <ul>
-                <li>
-                    {% for name,count in data %}
-                        {{ name }} - {{ count }}
-                    {% endfor %}
-                </li>
-            </ul>
-        </dd>
-    {% endfor %}
-</dl>
-<h1>Detailed Date</h1>
-<table border="1">
-    <tr>
-        <th>OS</th>
-        <th>DEVICE_TYPE</th>
-        <th>BROWSER</th>
-        <th>COUNTRY</th>
-        <th>REGION</th>
-        <th>CITY</th>
-        <th>TIME_CLICKED</th>
-    </tr>
-    {% for items in detailed %}
-        <tr>
-            {% for i in items %}
-                <td>
+<!-- Styles -->
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px
+    }
 
-                    {{ i }}
-                </td>
+</style>
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/maps.js"></script>
+<script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
+
+<!-- Chart code -->
+<script>
+    am4core.ready(function () {
+
+// Themes begin
+// Themes end
+
+        // Create map instance
+        var chart = am4core.create("chartdiv", am4maps.MapChart);
+
+// Set map definition
+        chart.geodata = am4geodata_worldLow;
+
+// Set projection
+        chart.projection = new am4maps.projections.Miller();
+
+// Create map polygon series
+        var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+        polygonSeries.exclude = ["AQ"];
+
+//Set min/max fill color for each area
+        polygonSeries.heatRules.push({
+            property: "fill",
+            target: polygonSeries.mapPolygons.template,
+            min: chart.colors.getIndex(1).brighten(1),
+            max: chart.colors.getIndex(1).brighten(-0.3)
+        });
+
+
+// Make map load polygon data (state shapes and names) from GeoJSON
+        polygonSeries.useGeodata = true;
+
+// Set heatmap values for each state
+        polygonSeries.data = [
+            {% for country,frequency in country %}
+                {
+                    "id": "{{ country }}",
+                    "value":{{ frequency }}
+                },
             {% endfor %}
-        </tr>
-    {% endfor %}
-</table>
-</body>
+        ];
+// Set up heat legend
+        let heatLegend = chart.createChild(am4maps.HeatLegend);
+        heatLegend.series = polygonSeries;
+        heatLegend.align = "right";
+        heatLegend.valign = "bottom";
+        heatLegend.width = am4core.percent(20);
+        heatLegend.marginRight = am4core.percent(4);
+        heatLegend.minValue = 0;
+        heatLegend.maxValue = 40000000;
+
+// Set up custom heat map legend labels using axis ranges
+        var minRange = heatLegend.valueAxis.axisRanges.create();
+        minRange.value = heatLegend.minValue;
+        minRange.label.text = "Little";
+        var maxRange = heatLegend.valueAxis.axisRanges.create();
+        maxRange.value = heatLegend.maxValue;
+        maxRange.label.text = "A lot!";
+
+// Blank out internal heat legend value axis labels
+        heatLegend.valueAxis.renderer.labels.template.adapter.add("text", function (labelText) {
+            return "";
+        });
+
+// Configure series tooltip
+        var polygonTemplate = polygonSeries.mapPolygons.template;
+        polygonTemplate.tooltipText = "{name}: {value}";
+        polygonTemplate.nonScalingStroke = true;
+        polygonTemplate.strokeWidth = 0.5;
+
+// Create hover state and set alternative fill color
+        var hs = polygonTemplate.states.create("hover");
+        hs.properties.fill = am4core.color("#3c5bdc");
+
+    }); // end am4core.ready()
+</script>
+
+<!-- HTML -->
+<div id="chartdiv"></div>
 </html>

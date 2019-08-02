@@ -9,7 +9,6 @@ from random import shuffle
 from zipfile import ZipFile
 
 import user_agents
-from django.conf import settings
 
 
 def compress_to_zip(files):
@@ -20,16 +19,18 @@ def compress_to_zip(files):
     :param files:
     :return:
     """
-    zip_file = ZipFile('/tmp/tmp.zip', "w")
+
+    # TODO: Fix bug where same files produce different hash
+    zip_file = ZipFile('tmp.zip', "w")
     for f in files:
         zip_file.writestr(f.name, f.read())
 
     zip_file.close()
     try:
-        return {"name": "anonSend.zip", "file": open('/tmp/tmp.zip', 'rb'), "content_type": "application/zip",
-                "size": os.path.getsize('/tmp/tmp.zip'), "charset": "utf-8"}
+        return {"name": "anonSend.zip", "file": open('tmp.zip', 'rb'), "content_type": "application/zip",
+                "size": os.path.getsize('tmp.zip'), "charset": "utf-8"}
     finally:
-        os.remove('/tmp/tmp.zip')
+        os.remove('tmp.zip')
 
 
 def get_analytics(meta):
@@ -53,10 +54,10 @@ def get_analytics(meta):
     # Ip address
     try:
         ip_address = meta['REMOTE_ADDR']
-        response = urllib.request.urlopen('http://ip-api.com/json/' + ip_address)
+        response = urllib.request.urlopen('https://ipapi.co/' + ip_address + "/json/")
         ip_info = json.loads(response.read())
         country = ip_info["country"]
-        region = ip_info["regionName"]
+        region = ip_info["region"]
         city = ip_info["city"]
     except:
         country = "Unknown"
@@ -102,7 +103,6 @@ def gen_base62(name):
     dict_62 = {str(i).zfill(2): base62[i] for i in range(62)}
     for i in range(62, 100):
         dict_62[str(i)] = base62[i // 10] + base62[i % 10]
-    name = os.path.join(settings.MEDIA_ROOT, name)
     with open(name, "wb") as f:
         pickle.dump(dict_62, f)
 
@@ -117,7 +117,6 @@ def gen_analytic_link():
     :return: analytic_link
     """
     name = "base62_analytic_dict.pkl"
-    name = os.path.join(settings.MEDIA_ROOT, name)
     if not os.path.exists(name):
         gen_base62(name)
     with open(name, 'rb') as f:
@@ -139,7 +138,6 @@ def gen_link():
     :return: public_link
     """
     name = "base62_public_dict.pkl"
-    name = os.path.join(settings.MEDIA_ROOT, name)
     if not os.path.exists(name):
         gen_base62(name)
     with open(name, 'rb') as f:

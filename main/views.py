@@ -133,12 +133,7 @@ def analytic_link_handle(request, analytic_link):
     query = UploadFiles.objects.all().filter(analytic_link=analytic_link)
     if query.exists() and query.first().expires_at.timestamp() > datetime.now().timestamp():
         results = Analytics.objects.filter(upload_file=query.first())
-        chart_data = {}
-        chart_attributes = ['os', 'device_type', 'browser']
-        for data in chart_attributes:
-            chart_data[data] = Counter([i[0] for i in list(results.values_list(data))]).items()
-        detailed = list(
-            results.values_list('os', 'device_type', 'browser', 'country', 'region', 'city', 'time_clicked'))
-        return render(request, 'analytics.html', {"chart_data": chart_data, "detailed": detailed})
+        country = Counter([x for i in list(results.values_list('country')) for x in i]).items()
+        return render(request, 'analytics.html', {"country": country})
     else:
         raise Http404()
