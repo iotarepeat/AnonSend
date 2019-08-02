@@ -2,22 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+    <script>
+        function submitForm() {
+            var input = document.getElementById('id_password');
+            input.classList.remove('is-invalid');
+            input.classList.add("is-valid");
+            document.getElementById('submit').disabled = true;
+        }
+    </script>
 </head>
-<body>
-{% for message in messages %}
-    <div class=" alert alert-success">
-        <a class=" close" href="#" data-dismiss="alert">x</a>
+<body class="container-fluid p-3">
+<form method="post" class="form-inline" onsubmit="submitForm()">
+    <div class="form-group">
+        {% csrf_token %}
+        {% if visible %}
+            <div class="col-auto">
+                <label for="id_password" class="col-form-label">Password:</label>
+            </div>
+            <div class="col-auto">
 
-        {{ message }}
-
+                <input type="password" class="form-control {{ valid }}" name="password"
+                       maxlength="41"
+                       id="id_password">
+                <div class="invalid-feedback">
+                    Invalid password
+                </div>
+            </div>
+        {% endif %}
     </div>
-{% endfor %}
-<form method="post" onsubmit="document.getElementById('submit').disabled=true;">
-    {% csrf_token %}
-    {% if visible %}
-        {{ form }}
-    {% endif %}
-    <input type="submit" value="Download" id="submit"/>
+    <div class="form-group col-auto">
+        <input type="submit" class="btn btn-primary" value="Download"
+               id="submit"/>
+    </div>
 </form>
 </body>
 </html>

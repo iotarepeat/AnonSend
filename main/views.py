@@ -1,7 +1,6 @@
 from collections import Counter
 from datetime import datetime
 
-from django.contrib import messages
 from django.core.files.uploadedfile import UploadedFile
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
@@ -97,25 +96,28 @@ def public_link_handle(request, public_link):
     :return: public_link.html
     """
     upload_file = get_object_or_404(UploadFiles, pk=public_link)
-    visibility = upload_file.password != ""
-    if request.method == "POST":
-        form = PasswordForm(request.POST)
+    password_set = upload_file.password != ""
+    download_count = len(Analytics.objects.filter(upload_file=upload_file))
+    expires_at = upload_file.expires_at.timestamp()
+    current_time = datetime.now().timestamp()
+    if download_count < upload_file.max_downloads and expires_at > current_time:
+        if request.method == "POST":
+            form = PasswordForm(request.POST, expected_password=upload_file.password)
 
-        if form.is_valid():
-            if form.cleaned_data['password'] != upload_file.password:
-                messages.error(request, "Invalid password")
-                return render(request, 'public_link.html', {"visible": visibility, "form": PasswordForm()})
-            download_count = len(Analytics.objects.filter(upload_file=upload_file))
-            expires_at = upload_file.expires_at.timestamp()
-            current_time = datetime.now().timestamp()
-            if download_count < upload_file.max_downloads and expires_at > current_time:
+            if form.is_valid():
                 results = get_analytics(request.META)
                 Analytics(upload_file_id=public_link, **results).save()
                 return FileResponse(upload_file.file, as_attachment=True, filename=upload_file.file_name)
             else:
-                # File expired
-                raise Http404()
-    return render(request, 'public_link.html', {"visible": visibility, "form": PasswordForm()})
+                return render(request, 'public_link.html',
+                              {"visible": password_set, "form": PasswordForm(), "valid": "is-invalid"})
+
+        else:
+            return render(request, 'public_link.html',
+                          {"visible": password_set, "form": PasswordForm(), "valid": ""})
+
+    else:
+        raise Http404()
 
 
 def analytic_link_handle(request, analytic_link):
