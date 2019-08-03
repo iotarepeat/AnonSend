@@ -32,4 +32,5 @@ class PasswordForm(forms.ModelForm):
     def clean(self):
         if self.cleaned_data['password'] != self.expected_password:
             self.add_error("password", ValidationError(message="Invalid Password"))
+            raise ValidationError(message="Invalid Password")
         return self.cleaned_data

@@ -96,11 +96,10 @@ def public_link_handle(request, public_link):
     :return: public_link.html
     """
     upload_file = get_object_or_404(UploadFiles, pk=public_link)
-    password_set = upload_file.password != ""
     download_count = len(Analytics.objects.filter(upload_file=upload_file))
     expires_at = upload_file.expires_at.timestamp()
     current_time = datetime.now().timestamp()
-    if download_count < upload_file.max_downloads and expires_at > current_time:
+    if download_count <= upload_file.max_downloads and expires_at > current_time:
         if request.method == "POST":
             form = PasswordForm(request.POST, expected_password=upload_file.password)
 
@@ -110,11 +109,11 @@ def public_link_handle(request, public_link):
                 return FileResponse(upload_file.file, as_attachment=True, filename=upload_file.file_name)
             else:
                 return render(request, 'public_link.html',
-                              {"visible": password_set, "form": PasswordForm(), "valid": "is-invalid"})
+                              {"form": PasswordForm(expected_password=upload_file.password), "valid": "is-invalid"})
 
         else:
             return render(request, 'public_link.html',
-                          {"visible": password_set, "form": PasswordForm(), "valid": ""})
+                          {"form": PasswordForm(expected_password=upload_file.password), "valid": ""})
 
     else:
         raise Http404()
