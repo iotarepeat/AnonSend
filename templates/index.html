@@ -1,15 +1,71 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
+    {% load static %}
+    {% load myfilters %}
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> AnonSend - Anonymous File Sharing Service</title>
+
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+
 </head>
-<body>
-<form method="POST" enctype="multipart/form-data" action="upload_success">
+
+<body class="container-fluid p-2 bg-light text-dark">
+<form method="POST" enctype="multipart/form-data" action="{% url 'upload_success' %}">
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Upload"/>
+
+    <div class="form-inline my-2">
+        <div class="col-auto">
+            {{ form.visible_fields.0.label_tag }}
+        </div>
+        <div class="col-auto">
+            {{ form.visible_fields.0|addclass:"form-control-file" }}
+        </div>
+    </div>
+
+    <div class="form-inline">
+        <div class="form-inline my-2">
+            <div class="col-auto">
+                {{ form.visible_fields.1.label_tag }}
+            </div>
+
+            <div class="col-auto">
+                {{ form.visible_fields.1|addclass:"custom-select" }}
+            </div>
+        </div>
+        <div class="form-inline my-2">
+            <div class="col-auto">
+                {{ form.visible_fields.2.label_tag }}
+            </div>
+
+            <div class="col-auto">
+                {{ form.visible_fields.2|addclass:"custom-select" }}
+            </div>
+        </div>
+
+    </div>
+    <div class="form-inline my-2">
+        <div class="col-auto">
+            {{ form.visible_fields.3.label_tag }}
+        </div>
+        <div class="col-auto">
+            {{ form.visible_fields.3|addclass:"form-control" }}
+        </div>
+    </div>
+
+    <div class="form-inline">
+        <div class="col-auto">
+            <input type="submit" class="btn btn-primary" value="Upload"/>
+        </div>
+    </div>
+
 </form>
 
+
 </body>
+
 </html>

@@ -7,7 +7,7 @@ from .models import UploadFiles
 class UploadFileForm(forms.ModelForm):
     class Meta:
         model = UploadFiles
-        fields = ('file', 'expires_at', 'password', 'max_downloads')
+        fields = ('file', 'expires_at', 'max_downloads', 'password')
         widgets = {
             'file': forms.ClearableFileInput(attrs={"multiple": True}),
             'password': forms.PasswordInput(),

@@ -31,7 +31,7 @@ class UploadFiles(models.Model):
     # Form inputs
     file = models.FileField(upload_to="uploaded_files/")
     password = models.CharField(max_length=41, blank=True)
-    expires_at = models.DateTimeField(verbose_name="Expires in", choices=DATE_CHOICES, default=get_today)
+    expires_at = models.DateTimeField(verbose_name="Expires in", choices=DATE_CHOICES, default=DATE_CHOICES[0])
     max_downloads = models.PositiveSmallIntegerField(default=1, choices=[(i, i) for i in range(1, 11)])
 
     # Derived fields

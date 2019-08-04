@@ -65,8 +65,7 @@ def uploaded_link(request):
                 
                 *Note*: Separate directory is created to mitigate errors in files with same name different contents
                 """
-                name = file.name
-                name = name.split("/")
+                name = file.name.split("/")
                 name.insert(0, model.file_hash)
                 name = "/".join(name)
                 model.file.save(name, file)
