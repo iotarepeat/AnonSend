@@ -2,7 +2,7 @@ from collections import Counter
 from datetime import datetime
 
 from django.core.files.uploadedfile import UploadedFile
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import UploadFileForm, PasswordForm
@@ -132,8 +132,11 @@ def analytic_link_handle(request, analytic_link):
     """
     query = UploadFiles.objects.all().filter(analytic_link=analytic_link)
     if query.exists() and query.first().expires_at.timestamp() > datetime.now().timestamp():
-        results = Analytics.objects.filter(upload_file=query.first())
+        results = Analytics.objects.filter(upload_file=query.first()).order_by('-time_clicked')
+        device_type = Counter([x for i in list(results.values_list('device_type')) for x in i]).items()
+        browser = Counter([x for i in list(results.values_list('browser')) for x in i]).items()
         country = Counter([x for i in list(results.values_list('country')) for x in i]).items()
-        return render(request, 'analytics.html', {"country": country})
+        return render(request, 'analytics.html',
+                      {"country": country, "device_type": device_type, "browser": browser, "results": results})
     else:
         raise Http404()

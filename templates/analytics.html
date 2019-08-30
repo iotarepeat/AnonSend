@@ -1,96 +1,207 @@
-<!-- Styles -->
 <html>
-<!-- Styles -->
-<style>
-    #chartdiv {
-        width: 100%;
-        height: 500px
-    }
+<head>
 
-</style>
+    <meta charset="UTF-8"/>
+    <!-- Resources -->
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/maps.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
 
-<!-- Resources -->
-<script src="https://www.amcharts.com/lib/4/core.js"></script>
-<script src="https://www.amcharts.com/lib/4/maps.js"></script>
-<script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
-
-<!-- Chart code -->
-<script>
-    am4core.ready(function () {
-
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link type="text/css" rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+    <!-- Chart code -->
+    <script>
+        am4core.ready(function () {
 // Themes begin
+            am4core.useTheme(am4themes_animated);
 // Themes end
 
-        // Create map instance
-        var chart = am4core.create("chartdiv", am4maps.MapChart);
+            var chart = am4core.create("piediv1", am4charts.PieChart);
+            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+            {#chart.legend = new am4charts.Legend();#}
+
+            chart.data = [
+
+                {% for k,v in device_type %}
+                    {
+                        device: "{{ k }}",
+                        frequency: "{{ v }}"
+                    }
+                {% endfor %}
+
+            ];
+
+            var series = chart.series.push(new am4charts.PieSeries());
+            series.dataFields.value = "frequency";
+            series.dataFields.category = "device";
+
+            var chart = am4core.create("piediv2", am4charts.PieChart);
+            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+            {#chart.legend = new am4charts.Legend();#}
+
+            chart.data = [
+                {% for k,v in browser %}
+                    {
+                        browser: "{{ k }}",
+                        frequency: "{{ v }}"
+                    }
+                {% endfor %}
+            ];
+
+            var series = chart.series.push(new am4charts.PieSeries());
+            series.dataFields.value = "frequency";
+            series.dataFields.category = "browser";
+            // Create map instance
+            var chart = am4core.create("mapdiv", am4maps.MapChart);
 
 // Set map definition
-        chart.geodata = am4geodata_worldLow;
+            chart.geodata = am4geodata_worldLow;
 
 // Set projection
-        chart.projection = new am4maps.projections.Miller();
+            chart.projection = new am4maps.projections.Miller();
 
 // Create map polygon series
-        var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
-        polygonSeries.exclude = ["AQ"];
+            var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+            polygonSeries.exclude = ["AQ"];
 
 //Set min/max fill color for each area
-        polygonSeries.heatRules.push({
-            property: "fill",
-            target: polygonSeries.mapPolygons.template,
-            min: chart.colors.getIndex(1).brighten(1),
-            max: chart.colors.getIndex(1).brighten(-0.3)
-        });
+            polygonSeries.heatRules.push({
+                property: "fill",
+                target: polygonSeries.mapPolygons.template,
+                min: chart.colors.getIndex(1).brighten(1),
+                max: chart.colors.getIndex(1).brighten(-0.3)
+            });
 
 
 // Make map load polygon data (state shapes and names) from GeoJSON
-        polygonSeries.useGeodata = true;
+            polygonSeries.useGeodata = true;
 
 // Set heatmap values for each state
-        polygonSeries.data = [
-            {% for country,frequency in country %}
-                {
-                    "id": "{{ country }}",
-                    "value":{{ frequency }}
-                },
-            {% endfor %}
-        ];
+            polygonSeries.data = [
+                {% for k,v in country %}
+                    {
+                        id: "{{ k }}",
+                        value:{{ v }}
+                    },
+                {% endfor %}
+            ];
 // Set up heat legend
-        let heatLegend = chart.createChild(am4maps.HeatLegend);
-        heatLegend.series = polygonSeries;
-        heatLegend.align = "right";
-        heatLegend.valign = "bottom";
-        heatLegend.width = am4core.percent(20);
-        heatLegend.marginRight = am4core.percent(4);
-        heatLegend.minValue = 0;
-        heatLegend.maxValue = 40000000;
+            let heatLegend = chart.createChild(am4maps.HeatLegend);
+            heatLegend.series = polygonSeries;
+            heatLegend.align = "right";
+            heatLegend.valign = "bottom";
+            heatLegend.width = am4core.percent(20);
+            heatLegend.marginRight = am4core.percent(4);
+            heatLegend.minValue = 0;
+            heatLegend.maxValue = 40000000;
 
 // Set up custom heat map legend labels using axis ranges
-        var minRange = heatLegend.valueAxis.axisRanges.create();
-        minRange.value = heatLegend.minValue;
-        minRange.label.text = "Little";
-        var maxRange = heatLegend.valueAxis.axisRanges.create();
-        maxRange.value = heatLegend.maxValue;
-        maxRange.label.text = "A lot!";
+            var minRange = heatLegend.valueAxis.axisRanges.create();
+            minRange.value = heatLegend.minValue;
+            minRange.label.text = "Little";
+            var maxRange = heatLegend.valueAxis.axisRanges.create();
+            maxRange.value = heatLegend.maxValue;
+            maxRange.label.text = "A lot!";
 
 // Blank out internal heat legend value axis labels
-        heatLegend.valueAxis.renderer.labels.template.adapter.add("text", function (labelText) {
-            return "";
-        });
+            heatLegend.valueAxis.renderer.labels.template.adapter.add("text", function (labelText) {
+                return "";
+            });
 
 // Configure series tooltip
-        var polygonTemplate = polygonSeries.mapPolygons.template;
-        polygonTemplate.tooltipText = "{name}: {value}";
-        polygonTemplate.nonScalingStroke = true;
-        polygonTemplate.strokeWidth = 0.5;
+            var polygonTemplate = polygonSeries.mapPolygons.template;
+            polygonTemplate.tooltipText = "{name}: {value}";
+            polygonTemplate.nonScalingStroke = true;
+            polygonTemplate.strokeWidth = 0.5;
 
 // Create hover state and set alternative fill color
-        var hs = polygonTemplate.states.create("hover");
-        hs.properties.fill = am4core.color("#3c5bdc");
+            var hs = polygonTemplate.states.create("hover");
+            hs.properties.fill = am4core.color("#3c5bdc");
+            // Zoom control;
+            chart.zoomControl = new am4maps.ZoomControl();
 
-    }); // end am4core.ready()
-</script>
+            var homeButton = new am4core.Button();
+            homeButton.events.on("hit", function () {
+                chart.goHome();
+            });
 
+            homeButton.icon = new am4core.Sprite();
+            homeButton.padding(7, 5, 7, 5);
+            homeButton.width = 30;
+            homeButton.icon.path = "M16,8 L14,8 L14,16 L10,16 L10,10 L6,10 L6,16 L2,16 L2,8 L0,8 L8,0 L16,8 Z M16,8";
+            homeButton.marginBottom = 10;
+            homeButton.parent = chart.zoomControl;
+            homeButton.insertBefore(chart.zoomControl.plusButton);
+        }); // end am4core.ready()
+    </script>
+
+</head>
 <!-- HTML -->
-<div id="chartdiv"></div>
+<body>
+<div class="container-fluid">
+
+    <div class="row">
+        <p class="h2">Geolocation Statistics:</p>
+    </div>
+    <div id="mapdiv" class="row h-50"></div>
+    <div class="row">
+        <p class="h2">Device Statistics: </p>
+    </div>
+    <div class="row ">
+        <div id="piediv1" class="col-6" style="min-height: 300px;min-width: 640px;"></div>
+        <div id="piediv2" class="col-6" style="min-height: 300px;min-width: 640px;"></div>
+    </div>
+    <div class="row">
+        <p class="h2">Detailed Statistics:</p>
+    </div>
+    <div class="row">
+        <table class="table table-light">
+            <tr>
+                <th>No.</th>
+                <th>Operating System</th>
+                <th>Device Type</th>
+                <th>Browser</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>Region</th>
+                <th>Time</th>
+            </tr>
+            {% for record in results|slice:":10" %}
+                <tr>
+                    <td>
+                        {{ record.id }}
+                    </td>
+                    <td>
+                        {{ record.os }}
+                    </td>
+                    <td>
+                        {{ record.device_type }}
+                    </td>
+                    <td>
+                        {{ record.browser }}
+                    </td>
+                    <td>
+                        {{ record.country }}
+                    </td>
+                    <td>
+                        {{ record.city }}
+                    </td>
+                    <td>
+                        {{ record.region }}
+                    </td>
+                    <td>
+                        {{ record.time_clicked }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <a href="#" class="btn btn-primary m-3">Download as csv</a>
+    </div>
+</div>
+</body>
 </html>
