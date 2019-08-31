@@ -2,7 +2,7 @@ from collections import Counter
 from datetime import datetime
 
 from django.core.files.uploadedfile import UploadedFile
-from django.http import FileResponse, Http404, JsonResponse
+from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import UploadFileForm, PasswordForm
