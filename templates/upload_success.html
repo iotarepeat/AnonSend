@@ -6,15 +6,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Upload Success</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
-    <script>
-        function img_click(btn_type) {
-            let text = document.getElementById(btn_type);
-            text.select();
-            document.execCommand("copy");
-
-        }
-    </script>
+    <script src="{% static "js/bootstrap.bundle.js" %}"></script>
+    <script src="{% static "js/qrcode.min.js" %}"></script>
 
 </head>
 
@@ -47,9 +44,17 @@
                        id="public"
                        value="http://127.0.0.1:8000/{{ public_link }}"
                        onclick="this.select();"/>
-                <img alt="Copy to clipboard" class="my-3" onclick="img_click('public');"
+                <img alt="Copy to clipboard" class="my-3" onclick="copy_to_clipboard('public')"
                      src="{% static "images/clippy.svg" %}"
                      style="width: 30px;height:30px" title="Copy to clipboard">
+                <button class="btn" data-toggle="popover"
+                        data-title="QR Code"
+                        data-content="
+                            <div id='qr_pub' style=''></div>
+                            <script>
+                                new QRCode(document.getElementById('qr_pub'), 'http://127.0.0.1:8000/{{ public_link }}');
+                            </script> ">QR
+                </button>
             </div>
 
         </div>
@@ -85,7 +90,16 @@
                                value="http://127.0.0.1:8000/analytics/{{ analytic_link }}" onclick="this.select();"/>
                 <img src="{% static "images/clippy.svg" %}" class="my-3" style="width: 30px;height:30px"
                      title="Copy to clipboard"
-                     onclick="img_click('analytic');" alt="Copy to clipboard">
+                     onclick="copy_to_clipboard('analytic');" alt="Copy to clipboard">
+
+                <button class="btn" data-toggle="popover"
+                        data-title="QR Code"
+                        data-content="
+                        <div id='qr_analytic' style=''></div>
+                        <script>
+                        new QRCode(document.getElementById('qr_analytic'), 'http://127.0.0.1:8000/analytics/{{ analytic_link }}');
+                        </script> ">QR
+                </button>
             </div>
 
         </div>
@@ -94,5 +108,21 @@
 
 
 </body>
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+                html: true,
+            }
+        )
+    });
+
+    function copy_to_clipboard(btn_type) {
+        let text = document.getElementById(btn_type);
+        text.select();
+        document.execCommand("copy");
+    }
+
+
+</script>
 
 </html>
