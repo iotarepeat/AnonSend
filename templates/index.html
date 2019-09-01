@@ -15,6 +15,8 @@
 </head>
 
 <body class="container-fluid p-2 bg-light text-dark">
+<h1 class="m-4"><strong>Anon</strong>Send</h1>
+<hr/>
 <form method="POST" enctype="multipart/form-data" action="{% url 'upload_success' %}">
     {% csrf_token %}
 
