@@ -124,6 +124,8 @@ def downloadAsCsv(request, analytic_link):
         results = Analytics.objects.filter(upload_file=query.first()).order_by('-time_clicked')
         fname = queryToCsv(results);
         return FileResponse(open(fname, 'rb'), as_attachment=True, filename="Anonsend_analytics.csv")
+    else:
+        raise Http404()
 
 
 def analytic_link_handle(request, analytic_link):

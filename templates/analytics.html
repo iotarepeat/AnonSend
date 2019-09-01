@@ -2,6 +2,7 @@
 <head>
 
     <meta charset="UTF-8"/>
+    <title>Analytics</title>
     <!-- Resources -->
     <script src="https://www.amcharts.com/lib/4/core.js"></script>
     <script src="https://www.amcharts.com/lib/4/maps.js"></script>
@@ -14,6 +15,11 @@
     <link type="text/css" rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
     <!-- Chart code -->
     <script>
+        function downloadAsCsv() {
+            let btn = document.getElementById('submit');
+            btn.classList.remove("btn-primary");
+            btn.classList.add("btn-success");
+        }
         am4core.ready(function () {
 // Themes begin
             am4core.useTheme(am4themes_animated);
@@ -196,7 +202,7 @@
                 </tr>
             {% endfor %}
         </table>
-        <a href="/csv/{{ link }}" class="btn btn-primary m-3">Download as csv</a>
+        <a id="submit" onclick="downloadAsCsv();" href="/csv/{{ link }}" class="btn btn-primary m-3">Download as csv</a>
     </div>
 </div>
 </body>

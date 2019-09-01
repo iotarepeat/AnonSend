@@ -20,6 +20,7 @@ def queryToCsv(query):
     header = ["os", "device_type", "browser", "country", "region", "city", "time_clicked"]
     with open("/tmp/csvData.csv", "w") as f:
         csvWriter = csv.writer(f)
+        csvWriter.writerow(header)
         for row in query.values_list(*header):
             csvWriter.writerow(row)
     return "/tmp/csvData.csv"
