@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 import pickle
@@ -9,6 +10,19 @@ from random import shuffle
 from zipfile import ZipFile
 
 import user_agents
+
+
+def queryToCsv(query):
+    """
+    :param fname: The fileName
+    :type query: QuerySet
+    """
+    header = ["os", "device_type", "browser", "country", "region", "city", "time_clicked"]
+    with open("/tmp/csvData.csv", "w") as f:
+        csvWriter = csv.writer(f)
+        for row in query.values_list(*header):
+            csvWriter.writerow(row)
+    return "/tmp/csvData.csv"
 
 
 def compress_to_zip(files):

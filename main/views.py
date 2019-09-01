@@ -6,7 +6,7 @@ from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import UploadFileForm, PasswordForm
-from .helper import get_analytics, compress_to_zip, get_hash
+from .helper import get_analytics, compress_to_zip, get_hash, queryToCsv
 from .models import UploadFiles, Analytics
 
 
@@ -118,6 +118,14 @@ def public_link_handle(request, public_link):
         raise Http404()
 
 
+def downloadAsCsv(request, analytic_link):
+    query = UploadFiles.objects.all().filter(analytic_link=analytic_link)
+    if query.exists() and query.first().expires_at.timestamp() > datetime.now().timestamp():
+        results = Analytics.objects.filter(upload_file=query.first()).order_by('-time_clicked')
+        fname = queryToCsv(results);
+        return FileResponse(open(fname, 'rb'), as_attachment=True, filename="Anonsend_analytics.csv")
+
+
 def analytic_link_handle(request, analytic_link):
     """
     **Beta**
@@ -137,6 +145,7 @@ def analytic_link_handle(request, analytic_link):
         browser = Counter([x for i in list(results.values_list('browser')) for x in i]).items()
         country = Counter([x for i in list(results.values_list('country')) for x in i]).items()
         return render(request, 'analytics.html',
-                      {"country": country, "device_type": device_type, "browser": browser, "results": results})
+                      {"country": country, "device_type": device_type, "browser": browser, "results": results,
+                       "link": analytic_link})
     else:
         raise Http404()
