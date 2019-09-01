@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
     <script>
         function submitForm() {
-            let input = document.getElementById('id_password');
-            input.classList.remove('is-invalid');
-            input.classList.add("is-valid");
             let submit = document.getElementById('submit');
             submit.disabled = true;
             submit.classList.remove('btn-secondary');
             submit.classList.add('btn-success');
+            let input = document.getElementById('id_password');
+            input.classList.remove('is-invalid');
+            input.classList.add("is-valid");
         }
     </script>
 </head>
