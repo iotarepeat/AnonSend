@@ -3,7 +3,8 @@
 <head>
     {% load static %}
     {% load myfilters %}
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
+    <title>Download Files</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
     <script>
@@ -11,37 +12,54 @@
             let input = document.getElementById('id_password');
             input.classList.remove('is-invalid');
             input.classList.add("is-valid");
-            document.getElementById('submit').disabled = true;
+            let submit = document.getElementById('submit');
+            submit.disabled = true;
+            submit.classList.remove('btn-secondary');
+            submit.classList.add('btn-success');
         }
     </script>
 </head>
-<body class="container-fluid p-3">
-<form method="post" class="form-inline" onsubmit="submitForm()">
-    <div class="form-group">
-        {% csrf_token %}
-        {% if form.expected_password %}
-            {% for field in form.visible_fields %}
-                <div class="col-auto">
-                    {{ field.label_tag }}
-                </div>
-                <div class="col-auto">
-                    {% with "form-control "|add:valid as tmp_class %}
-                        {{ field|addclass:tmp_class }}
-                    {% endwith %}
-                    <div class="invalid-feedback">
-                        Invalid Password
-                    </div>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-    <div class="form-group col-auto">
-        <div class="align-content-center">
-            <input type="submit" class="btn btn-primary" value="Download"
-                   id="submit"/>
+<body class="containerfluid p-4">
+<div class="row m-3" style="height:200px;">
+    <p>
+    <h1><strong>Anon</strong>Send</h1>
+    <p>
+</div>
+<div style="text-align: center;">
+    <div class="row p-2 m-3 shadow-lg" style="background:#c4c3c0; border-radius: 25px;">
+        <div class="col-sm">
+            <img class="float-right mr-5" src="{% static "images/download.svg" %}" style="width:400px;">
         </div>
+        <div class="col-sm">
+            <div class="row p-2">
+                <h1 class="center"><strong>Download Files :</strong></h1>
+            </div>
+            <div class="row p-2">
+                <h3 class="text-justify">Download your files using AnonSend.<br>Fast, Simple, and Secure</h3>
+            </div>
+            <div class="row p-4 center">
+                <form method="post" class="form-inline" onsubmit="submitForm()">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        {% if form.expected_password %}
+                            {% for field in form.visible_fields %}
+                                <h5 class="mt-2">
+                                    {{ field.label_tag }}
+                                </h5>
+                                {% with "form-control mx-sm-3 "|add:valid as tmp_class %}
+                                    {{ field|addclass:tmp_class }}
+                                {% endwith %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <input type="submit" class="btn btn-secondary" value="Download" id="submit"/>
+                </form>
+            </div>
+        </div>
+
     </div>
-</form>
+</div>
 </body>
-</html>
+
+
+<
