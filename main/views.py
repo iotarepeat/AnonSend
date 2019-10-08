@@ -6,7 +6,7 @@ from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import UploadFileForm, PasswordForm
-from .helper import get_analytics, compress_to_zip, get_hash, queryToCsv
+from .helper import get_analytics, compress_to_zip, get_hash, queryToCsv, hashPassword
 from .models import UploadFiles, Analytics
 
 
@@ -47,7 +47,7 @@ def uploaded_link(request):
                 file = request.FILES['file']
             # Set defaults for models and also store data retrieved from forms
             model = UploadFiles(file=file, file_name=file.name, file_hash=get_hash(file),
-                                password=form.cleaned_data['password'],
+                                password=hashPassword(form.cleaned_data['password']),
                                 expires_at=form.cleaned_data['expires_at'],
                                 max_downloads=form.cleaned_data['max_downloads'])
             # Check for same file with hash

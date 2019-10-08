@@ -9,7 +9,21 @@ from hashlib import sha1
 from random import shuffle
 from zipfile import ZipFile
 
+import bcrypt
 import user_agents
+
+
+def hashPassword(password):
+    """
+    Hash a password using bcrypt
+    :param password:
+    :return: b_string
+    """
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+
+def verifyPassword(password, hashed):
+    return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
 
 
 def queryToCsv(query):
