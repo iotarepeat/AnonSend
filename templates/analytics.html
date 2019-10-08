@@ -20,6 +20,7 @@
             btn.classList.remove("btn-primary");
             btn.classList.add("btn-success");
         }
+
         am4core.ready(function () {
 // Themes begin
             am4core.useTheme(am4themes_animated);
@@ -145,64 +146,80 @@
             homeButton.insertBefore(chart.zoomControl.plusButton);
         }); // end am4core.ready()
     </script>
+    <style>
+        body {
+            background: #9053c7;
+            background: -webkit-linear-gradient(-135deg, #c850c0, #4158d0);
+            background: -o-linear-gradient(-135deg, #c850c0, #4158d0);
+            background: -moz-linear-gradient(-135deg, #c850c0, #4158d0);
+            background: linear-gradient(-135deg, #c850c0, #4158d0);
+        }
+    </style>
 
 </head>
 <!-- HTML -->
 <body>
-<div class="container-fluid">
+<div class="container">
 
-    <div class="row">
-        <p class="h2">Geolocation Statistics:</p>
+    <div class="bg-white py-2 px-4 m-3 rounded 2-">
+        <div class="row">
+            <p class="h2">Geolocation Statistics:</p>
+        </div>
+        <div id="mapdiv" class="row h-50"></div>
     </div>
-    <div id="mapdiv" class="row h-50"></div>
-    <div class="row">
-        <p class="h2">Device Statistics: </p>
+    <div class="bg-white py-2 px-4 m-3 rounded">
+        <div class="row">
+            <p class="h2">Device Statistics: </p>
+        </div>
+        <div class="row ">
+            <div id="piediv1" class="col-6" style="height: 300px;width: 640px;"></div>
+            <div id="piediv2" class="col-6" style="height: 300px;width: 640px;"></div>
+        </div>
     </div>
-    <div class="row ">
-        <div id="piediv1" class="col-6" style="height: 300px;width: 640px;"></div>
-        <div id="piediv2" class="col-6" style="height: 300px;width: 640px;"></div>
-    </div>
-    <div class="row">
-        <p class="h2">Detailed Statistics:</p>
-    </div>
-    <div class="row">
-        <table class="table table-light">
-            <tr>
-                <th>Time</th>
-                <th>Operating System</th>
-                <th>Device Type</th>
-                <th>Browser</th>
-                <th>Country</th>
-                <th>City</th>
-                <th>Region</th>
-            </tr>
-            {% for record in results|slice:":10" %}
+    <div class="bg-white py-2 px-4 m-3 rounded ">
+        <div class="row">
+            <p class="h2">Detailed Statistics:</p>
+        </div>
+        <div class="row d-none d-md-block d-lg-block">
+            <table class="table ">
                 <tr>
-                    <td>
-                        {{ record.time_clicked }}
-                    </td>
-                    <td>
-                        {{ record.os }}
-                    </td>
-                    <td>
-                        {{ record.device_type }}
-                    </td>
-                    <td>
-                        {{ record.browser }}
-                    </td>
-                    <td>
-                        {{ record.country }}
-                    </td>
-                    <td>
-                        {{ record.city }}
-                    </td>
-                    <td>
-                        {{ record.region }}
-                    </td>
+                    <th>Time</th>
+                    <th>Operating System</th>
+                    <th>Device Type</th>
+                    <th>Browser</th>
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>Region</th>
                 </tr>
-            {% endfor %}
-        </table>
-        <a id="submit" onclick="downloadAsCsv();" href="/csv/{{ link }}" class="btn btn-primary m-3">Download as csv</a>
+                {% for record in results|slice:":10" %}
+                    <tr>
+                        <td>
+                            {{ record.time_clicked }}
+                        </td>
+                        <td>
+                            {{ record.os }}
+                        </td>
+                        <td>
+                            {{ record.device_type }}
+                        </td>
+                        <td>
+                            {{ record.browser }}
+                        </td>
+                        <td>
+                            {{ record.country }}
+                        </td>
+                        <td>
+                            {{ record.city }}
+                        </td>
+                        <td>
+                            {{ record.region }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <a id="submit" onclick="downloadAsCsv();" href="/csv/{{ link }}" class="btn btn-primary m-3">Download as
+            csv</a>
     </div>
 </div>
 </body>
