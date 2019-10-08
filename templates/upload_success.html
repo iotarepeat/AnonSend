@@ -6,68 +6,77 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Upload Success</title>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
     <script src="{% static "js/bootstrap.bundle.js" %}"></script>
     <script src="{% static "js/qrcode.min.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 
 </head>
 
-<body class="containerfluid">
-<h1 class="m-4"><strong>Anon</strong>Send</h1>
-<hr/>
+<body class="container-login100 d-block ">
+<div class="limiter">
 
-<div class="row mt-5">
-    <div class="col-5">
-        <img class="float-left" src="{% static "images/mobile_testing.svg" %}" style="width:468px;height:350px;"
-             alt="Public Link Image">
-    </div>
-    <div class="col-5">
-        <div class="container">
-            <div class="row">
-                <h1 class="float-left">Public Link :</h1>
+    {% include 'header.html' %}
+
+    <div class="wrap-login100 w-75 row my-5 mx-2 fadeInLeft mx-auto" style="animation-duration: 1s">
+        <div class="col-4">
+            <div class="js-tilt" data-tilt>
+                <img src="{% static "images/mobile_testing.svg" %}" alt="Public Link Image" style="width: 350px">
             </div>
-            <div class="row">
-                <p class="text-justify">This is the public link for your files.<strong>The other person must require
-                    this to be
-                    able download your file(s)</strong>. It remains active for the specified amount of time and number
-                    of downloads.If you have set a password, the opposing person must submit the same password before
-                    they are allowed to download the file(s).
-                </p>
-            </div>
-            <div class="row">
-                <label for="public"></label>
-                <input readonly class="form-control-plaintext border border-dark w-50 p-2 m-2" id="public"
-                       value="http://127.0.0.1:8000/{{ public_link }}" onclick="this.select();"/>
-                <img alt="Copy to clipboard" class="my-3" onclick="copy_to_clipboard('public')"
-                     src="{% static "images/clippy.svg" %}" style="width: 30px;height:30px" title="Copy to clipboard">
-                <img class="my-3 ml-1"
-                     alt="Show QR"
-                     title="QR Code"
-                     src="{% static "images/qr.svg" %}"
-                     style="width: 30px;height:30px"
-                     data-toggle="popover"
-                     data-content="
+        </div>
+        <div class="col-8">
+            <div class="container">
+                <div class="row">
+                    <h1 class="float-left">Public Link :</h1>
+                </div>
+                <div class="row">
+                    <p class="text-justify">This is the public link for your files.<strong>The other person must
+                        require
+                        this to be
+                        able download your file(s)</strong>. It remains active for the specified amount of time and
+                        number
+                        of downloads.If you have set a password, the opposing person must submit the same password
+                        before
+                        they are allowed to download the file(s).
+                    </p>
+                </div>
+                <div class="row">
+                    <label for="public"></label>
+                    <input readonly class="input100 p-2 m-2 w-50" id="public"
+                           value="http://127.0.0.1:8000/{{ public_link }}" onclick="this.select();"/>
+                    <img alt="Copy to clipboard" class="my-3" onclick="copy_to_clipboard('public')"
+                         src="{% static "images/clippy.svg" %}" style="width: 30px;height:30px"
+                         title="Copy to clipboard">
+                    <img class="my-3 ml-1"
+                         alt="Show QR"
+                         title="QR Code"
+                         src="{% static "images/qr.svg" %}"
+                         style="width: 30px;height:30px"
+                         data-toggle="popover"
+                         data-content="
                             <div id='qr_pub' style=''></div>
                             <script>
                                       new QRCode(document.getElementById('qr_pub'), 'http://127.0.0.1:8000/{{ public_link }}');
                             </script>"
-                />
+                    />
+
+                </div>
 
             </div>
-
         </div>
     </div>
 </div>
-<hr/>
-<div class="row mt-5">
-    <div class="col-5">
-        <img class="float-left" src="{% static "images/all_the_data.svg" %}" style="width:468px;height:350px;"
-             alt="Analytic link image"/>
+<hr class="bg-light"/>
+<div class="wrap-login100 row my-5 mx-2 fadeInRight mx-auto w-75" style="animation-duration: 1s">
+    <div class="col-4">
+        <div class="js-tilt" data-tilt>
+            <img src="{% static "images/all_the_data.svg" %}" style="width:350px"
+                 alt="Analytic link image"/>
+        </div>
     </div>
-    <div class="col-5">
+    <div class="col-8">
         <div class="container">
             <div class="row">
                 <h1 class="float-left">Analytic Link :</h1>
@@ -75,16 +84,19 @@
             <div class="row">
                 <p class="text-justify">
                     This is the analytic link. You can use this link to view a dashboard that displays various
-                    statistics corresponding to the public link. Statistics collected include device type, country, time
-                    of download and much more.<strong>The other person need not require this link</strong> to download
-                    the files. Your analytic link will expire after the time period you specified during uploading the
+                    statistics corresponding to the public link. Statistics collected include device type, country,
+                    time
+                    of download and much more.<strong>The other person need not require this link</strong> to
+                    download
+                    the files. Your analytic link will expire after the time period you specified during uploading
+                    the
                     file(s).
                 </p>
             </div>
             <div class="row">
                 <label for="analytic"></label>
                 <input readonly
-                       class="form-control-plaintext border border-dark w-50 p-2 m-2"
+                       class="input100 p-2 m-2 w-50"
                        id="analytic" value="http://127.0.0.1:8000/analytics/{{ analytic_link }}"
                        onclick="this.select();"
                 />
@@ -112,6 +124,7 @@
     </div>
 </div>
 
+</div>
 
 </body>
 <script>
@@ -126,6 +139,11 @@
         text.select();
         document.execCommand("copy");
     }
+</script>
+
+<script src="{% static 'js/tilt.jquery.min.js' %}"> $('.js-tilt').tilt({
+    reset: false, scale: 1.1
+})
 </script>
 
 </html>

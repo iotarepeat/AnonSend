@@ -25,8 +25,8 @@ DATE_CHOICES = [
 # Create your models here.
 class UploadFiles(models.Model):
     # Uniquely random fields
-    public_link = models.CharField(max_length=15, unique=True, primary_key=True, default=gen_link)
-    analytic_link = models.CharField(max_length=15, default=gen_analytic_link)
+    public_link = models.CharField(max_length=15, primary_key=True, default=gen_link)
+    analytic_link = models.CharField(max_length=15, unique=True, default=gen_analytic_link)
 
     # Form inputs
     file = models.FileField(upload_to="uploaded_files/")

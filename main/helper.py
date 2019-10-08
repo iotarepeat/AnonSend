@@ -12,6 +12,10 @@ from zipfile import ZipFile
 import user_agents
 
 
+def get_Sha1sum(password):
+    return sha1(password.encode('utf-8')).hexdigest()
+
+
 def queryToCsv(query):
     """
     :param fname: The fileName
@@ -145,6 +149,7 @@ def gen_analytic_link():
 
 def gen_link():
     """
+    TODO: Add a random character to links to remove collision for same time
     Generate and return public link
     - Read base62_public_link, create if does not exist
     - Encode current timestamp as bas62
