@@ -1,67 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    {% load myfilters %}
     {% load static %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Anon Send</title>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+    {% load myfilters %}
+    <title>Login V1</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/hamburgers.min.css' %}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <!--===============================================================================================-->
 </head>
-
-<body class="container-fluid bg-light">
-<h1 class="m-4"><strong>Anon</strong>Send</h1>
-<hr/>
-
-<form class="row p-2 " style="margin-top:15vh;" method="POST" enctype="multipart/form-data"
-      action="{% url 'upload_success' %}">
-
-    <div class="col d-none d-lg-block">
-        <img class="mr-5 p-5" src="{% static 'images/upload.svg' %}" style="width: 110%">
+<body class="container-login100">
+<div class="limiter">
+    <div class="d-block w-100 ">
+        {% include 'header.html' %}
     </div>
-
-    <div class="col p-2 m-3 bg-white border border-dark" style=" border-radius: 25px;">
-        {% csrf_token %}
-
-        <div class="row p-2 d-flex justify-content-center">
-            <div class="form-group">
-                {{ form.visible_fields.0.label_tag }}
-                {{ form.visible_fields.0|addclass:"form-control-file" }}
+    <div class="container-login100 justify-content-center">
+        <div class="wrap-login100 pt-4">
+            <div class="login100-pic js-tilt" data-tilt>
+                <img src="{% static 'images/upload.svg' %}" alt="IMG">
             </div>
-        </div>
-        <div class="row p-2 d-flex justify-content-center">
-            <div class="form-group" style="width:300px">
-                {{ form.visible_fields.1.label_tag }}
-                {{ form.visible_fields.1|addclass:"custom-select" }}
-            </div>
-        </div>
-        <div class="row p-2 d-flex justify-content-center">
-            <div class="form-group" style="width:300px">
-                {{ form.visible_fields.2.label_tag }}
-                {{ form.visible_fields.2|addclass:"custom-select" }}
-            </div>
-        </div>
 
-        <div class="row p-2 d-flex justify-content-center">
-            <div class="form-group" style="width: 300px">
-                {{ form.visible_fields.3.label_tag }}
-                {{ form.visible_fields.3|addclass:"form-control" }}
-            </div>
-        </div>
 
-        <div class="row p-2 d-flex justify-content-center">
-            <input type="submit" class="btn btn-primary" value="Upload"></input>
+            <form class="login100-form validate-form" method="POST" enctype="multipart/form-data"
+                  action="{% url 'upload_success' %}">
+                {% csrf_token %}
+                <span class="login100-form-title mb-2">
+						Upload your files
+					</span>
+                <div class="wrap-input100">
+                    {{ form.visible_fields.0.label_tag }}
+                    {{ form.visible_fields.0|addclass:"form-control-file" }}
+                </div>
+
+                <div class="wrap-input100">
+                    {{ form.visible_fields.1.label_tag }}
+                    {{ form.visible_fields.1|addclass:"custom-select" }}
+
+                </div>
+                <div class="wrap-input100">
+                    {{ form.visible_fields.2.label_tag }}
+                    {{ form.visible_fields.2|addclass:"custom-select" }}
+                </div>
+                <div class="wrap-input100">
+                    {{ form.visible_fields.3.label_tag }}
+                    {{ form.visible_fields.3|addclass:"form-control" }}
+                </div>
+                <div class="container-login100-form-btn">
+                    <input class="login100-form-btn" value="Upload" type="submit"/>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <div class="col d-none d-lg-block">
-        <img class="mr-5 p-5" src="{% static "images/pass.svg" %}" style="width:110%;">
-    </div>
-</form>
+
+<!--===============================================================================================-->
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'js/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'js/tilt.jquery.min.js' %}"></script>
+<script>
+    $('.js-tilt').tilt({
+        scale: 1.1
+    })
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'js/main.js' %}"></script>
+
 </body>
-
 </html>
