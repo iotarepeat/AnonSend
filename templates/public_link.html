@@ -7,55 +7,60 @@
     <title>Download Files</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
-    <script>
-        function submitForm() {
-            let submit = document.getElementById('submit');
-            submit.disabled = true;
-            submit.classList.remove('btn-secondary');
-            submit.classList.add('btn-success');
-            let input = document.getElementById('id_password');
-            input.classList.remove('is-invalid');
-            input.classList.add("is-valid");
-        }
-    </script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 </head>
-<body class="containerfluid p-4">
-<h1><strong>Anon</strong>Send</h1>
-<hr style="height:200px;"/>
-<div style="text-align: center;">
-    <div class="row p-2 m-3 shadow-lg" style="background:#c4c3c0; border-radius: 25px;">
-        <div class="col-sm">
-            <img class="float-right mr-5" src="{% static "images/download.svg" %}" style="width:400px;">
+<body class="container-login100 d-block">
+{% include 'header.html' %}
+<div class="container-login100 justify-content-center">
+
+    <div class="wrap-login100">
+        <div class="login100-pic js-tilt m-4" data-tilt>
+            <img src="{% static "images/download.svg" %}">
         </div>
-        <div class="col-sm">
-            <div class="row p-2">
-                <h1 class="center"><strong>Download Files :</strong></h1>
-            </div>
-            <div class="row p-2">
-                <h3 class="text-justify">Download your files using AnonSend.<br>Fast, Simple, and Secure</h3>
-            </div>
-            <div class="row p-4 center">
-                <form method="post" class="form-inline" onsubmit="submitForm()">
-                    <div class="form-group">
-                        {% csrf_token %}
-                        {% if form.expected_password %}
+        <div class="login100-form">
+            <span class="login100-form-title mb-4">Download Files</span>
+            <h5>Download your files using AnonSend.Fast, Simple, and Secure</h5>
+            <form method="post" class="login100-form" onsubmit="submitForm()">
+                <div class="form-group mt-3">
+                    {% csrf_token %}
+                    {% if form.expected_password %}
+                        <div class="wrap-input100">
+
                             {% for field in form.visible_fields %}
-                                <h5 class="mt-2">
-                                    {{ field.label_tag }}
-                                </h5>
-                                {% with "form-control mx-sm-3 "|add:valid as tmp_class %}
+                                {{ field.label_tag }}
+                                {% with "form-control "|add:valid as tmp_class %}
                                     {{ field|addclass:tmp_class }}
                                 {% endwith %}
                             {% endfor %}
-                        {% endif %}
-                    </div>
-                    <input type="submit" class="btn btn-secondary" value="Download" id="submit"/>
-                </form>
-            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <input type="submit" class="login100-form-btn" value="Download" id="submit"/>
+            </form>
         </div>
-
     </div>
+
 </div>
+<script>
+
+    function submitForm() {
+        let submit = document.getElementById('submit');
+        submit.disabled = true;
+        submit.classList.remove('btn-secondary');
+        submit.classList.add('btn-success');
+        let input = document.getElementById('id_password');
+        input.classList.remove('is-invalid');
+        input.classList.add("is-valid");
+    }
+
+</script>
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/tilt.jquery.min.js' %}"> $('.js-tilt').tilt({
+    reset: false, scale: 1.1
+})
+</script>
 </body>
 
 

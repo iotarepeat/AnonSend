@@ -13,10 +13,10 @@
 <body class="container-login100">
 <div class="limiter">
     {% include 'header.html' %}
-    <div class="container-login100 justify-content-center fadeInLeft" style="animation-duration: 1s">
+    <div class="container-login100 justify-content-center ">
         <div class="wrap-login100 pt-4">
             <div class="login100-pic js-tilt" data-tilt>
-                <img src="{% static 'images/upload.svg' %}" alt="IMG">
+                <img class="mt-3" src="{% static 'images/upload.svg' %}" alt="IMG">
             </div>
 
 
@@ -27,21 +27,21 @@
 						Upload your files
 					</span>
                 <div class="wrap-input100">
-                    {{ form.visible_fields.0.label_tag }}
+                    <h5>{{ form.visible_fields.0.label_tag }}</h5>
                     {{ form.visible_fields.0|addclass:"form-control-file" }}
                 </div>
 
                 <div class="wrap-input100">
-                    {{ form.visible_fields.1.label_tag }}
+                    <h5>{{ form.visible_fields.1.label_tag }}</h5>
                     {{ form.visible_fields.1|addclass:"custom-select" }}
 
                 </div>
                 <div class="wrap-input100">
-                    {{ form.visible_fields.2.label_tag }}
+                    <h5>{{ form.visible_fields.2.label_tag }}</h5>
                     {{ form.visible_fields.2|addclass:"custom-select" }}
                 </div>
                 <div class="wrap-input100">
-                    {{ form.visible_fields.3.label_tag }}
+                    <h5>{{ form.visible_fields.3.label_tag }}</h5>
                     {{ form.visible_fields.3|addclass:"form-control" }}
                 </div>
                 <div class="container-login100-form-btn">
