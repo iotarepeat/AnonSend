@@ -12,10 +12,6 @@ from zipfile import ZipFile
 import user_agents
 
 
-def get_Sha1sum(password):
-    return sha1(password.encode('utf-8')).hexdigest()
-
-
 def queryToCsv(query):
     """
     :param fname: The fileName
@@ -76,8 +72,6 @@ def get_analytics(meta):
         response = urllib.request.urlopen('https://ipapi.co/' + ip_address + "/json/")
         ip_info = json.loads(response.read())
         country = ip_info["country"]
-        region = ip_info["region"]
-        city = ip_info["city"]
     except:
         country = "Unknown"
         region = "Unknown"
@@ -93,8 +87,8 @@ def get_analytics(meta):
     elif ua.is_pc:
         device_type = "Personal Computer"
 
-    return {"os": ua.os.family, "device_type": device_type, "browser": ua.browser.family, "region": region,
-            "country": country, "city": city}
+    return {"os": ua.os.family, "device_type": device_type, "browser": ua.browser.family,
+            "country": country, }
 
 
 def get_hash(file_stream):

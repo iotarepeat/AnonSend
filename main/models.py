@@ -49,7 +49,5 @@ class Analytics(models.Model):
 
     # From ip
     country = models.CharField(max_length=40, default="Unknown")
-    region = models.CharField(max_length=40, default="Unknown")
-    city = models.CharField(max_length=40, default="Unknown")
 
     time_clicked = models.DateTimeField(auto_now_add=True)
