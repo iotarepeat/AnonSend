@@ -108,11 +108,13 @@ def public_link_handle(request, public_link):
                 return FileResponse(upload_file.file, as_attachment=True, filename=upload_file.file_name)
             else:
                 return render(request, 'public_link.html',
-                              {"form": PasswordForm(expected_password=None if verifyPassword('', upload_file.password) else 'True'), "valid": "is-invalid"})
+                              {"form": PasswordForm(expected_password=not verifyPassword('', upload_file.password)),
+                               "valid": "is-invalid"})
 
         else:
             return render(request, 'public_link.html',
-                          {"form": PasswordForm(expected_password=None if verifyPassword('', upload_file.password) else 'True'), "valid": ""})
+                          {"form": PasswordForm(expected_password=not verifyPassword('', upload_file.password)),
+                           "valid": ""})
 
     else:
         raise Http404()
