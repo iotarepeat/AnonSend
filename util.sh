@@ -2,6 +2,7 @@
 if [[ $1 == "clean" ]]
 then
     find . -name '*.pkl' -type f -exec rm -rf {} +
+    rm -rf ./media/uploaded_files/
     rm -rf 'db.sqlite3'
     find . -name '__pycache__' -type d -exec rm -rf {} +
     find ./main/migrations/ ! -name '__init__.py' -delete 2>/dev/null

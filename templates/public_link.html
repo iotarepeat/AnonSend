@@ -37,7 +37,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <input type="submit" class="login100-form-btn" value="Download" id="submit"/>
+                <input type="submit" class="login100-form-btn btn-dark" value="Download" id="submit"/>
             </form>
         </div>
     </div>
@@ -48,8 +48,7 @@
     function submitForm() {
         let submit = document.getElementById('submit');
         submit.disabled = true;
-        submit.classList.remove('btn-secondary');
-        submit.classList.add('btn-success');
+        submit.classList.add('bg-dark');
         let input = document.getElementById('id_password');
         input.classList.remove('is-invalid');
         input.classList.add("is-valid");
