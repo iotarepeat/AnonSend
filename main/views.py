@@ -6,7 +6,7 @@ from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import UploadFileForm, PasswordForm
-from .helper import get_analytics, compress_to_zip, get_hash, queryToCsv, hashPassword
+from .helper import get_analytics, compress_to_zip, get_hash, queryToCsv, hashPassword, verifyPassword
 from .models import UploadFiles, Analytics
 
 
@@ -108,11 +108,11 @@ def public_link_handle(request, public_link):
                 return FileResponse(upload_file.file, as_attachment=True, filename=upload_file.file_name)
             else:
                 return render(request, 'public_link.html',
-                              {"form": PasswordForm(expected_password=upload_file.password), "valid": "is-invalid"})
+                              {"form": PasswordForm(expected_password=None if verifyPassword('', upload_file.password) else 'True'), "valid": "is-invalid"})
 
         else:
             return render(request, 'public_link.html',
-                          {"form": PasswordForm(expected_password=upload_file.password), "valid": ""})
+                          {"form": PasswordForm(expected_password=None if verifyPassword('', upload_file.password) else 'True'), "valid": ""})
 
     else:
         raise Http404()
