@@ -31,7 +31,7 @@ def queryToCsv(query):
     :param fname: The fileName
     :type query: QuerySet
     """
-    header = ["os", "device_type", "browser", "country", "region", "city", "time_clicked"]
+    header = ["os", "device_type", "browser", "country", "time_clicked"]
     with open("/tmp/csvData.csv", "w") as f:
         csvWriter = csv.writer(f)
         csvWriter.writerow(header)
