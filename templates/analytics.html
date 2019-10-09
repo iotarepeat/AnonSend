@@ -188,8 +188,6 @@
                     <th>Device Type</th>
                     <th>Browser</th>
                     <th>Country</th>
-                    <th>City</th>
-                    <th>Region</th>
                 </tr>
                 {% for record in results|slice:":10" %}
                     <tr>
@@ -207,12 +205,6 @@
                         </td>
                         <td>
                             {{ record.country }}
-                        </td>
-                        <td>
-                            {{ record.city }}
-                        </td>
-                        <td>
-                            {{ record.region }}
                         </td>
                     </tr>
                 {% endfor %}
