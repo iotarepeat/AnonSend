@@ -22,7 +22,7 @@ class ReportFileForm(forms.ModelForm):
         exclude = ['public_link']
         widgets = {
             'reason': forms.RadioSelect(),
-            'description': forms.Textarea()
+            'description': forms.Textarea(attrs={"rows": 5, "cols": ""})
         }
 
 
