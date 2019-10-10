@@ -8,4 +8,5 @@ urlpatterns = [
     path('p/<public_link>', views.public_link_handle, name="public_link"),
     path('analytics/<analytic_link>', views.analytic_link_handle, name="analytic_link"),
     path('csv/<analytic_link>', views.downloadAsCsv, name="download_csv"),
+    path('report/<public_link>', views.report_link, name="report_link")
 ]

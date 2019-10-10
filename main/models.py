@@ -12,6 +12,12 @@ def get_today():
     return datetime.datetime.now()
 
 
+REPORT_CHOICES = [
+    ("malicious", "Malicious file"),
+    ("inappropriate", "Inappropriate / Illegal Content"),
+    ("dmca", "DMCA violation"),
+]
+
 DATE_CHOICES = [
     (get_today() + datetime.timedelta(minutes=10), "10 Minutes"),
     (get_today() + datetime.timedelta(days=1), "1 Day"),
@@ -50,3 +56,9 @@ class Analytics(models.Model):
     country = models.CharField(max_length=40, default="Unknown")
 
     time_clicked = models.DateTimeField(auto_now_add=True)
+
+
+class ReportLinks(models.Model):
+    public_link = models.ForeignKey(UploadFiles, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=10, choices=REPORT_CHOICES, default=REPORT_CHOICES[0])
+    description = models.CharField(max_length=150)

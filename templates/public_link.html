@@ -39,11 +39,21 @@
                 </div>
                 <input type="submit" class="login100-form-btn btn-dark" value="Download" id="submit"/>
             </form>
+            <div class="text-center mt-2">
+                <a class="txt2" href="javascript:void(0)" onclick="genReportLink()">Report file</a>
+            </div>
         </div>
     </div>
 
 </div>
 <script>
+    function genReportLink() {
+        // Return the public link
+        // domain.com/p/<public_link>
+        // Concat 'report/' to it
+        window.location.href = "/report/" + window.location.pathname.split('/')[2];
+
+    }
 
     function submitForm() {
         let submit = document.getElementById('submit');

@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import UploadFileForm, PasswordForm
+from .forms import UploadFileForm, PasswordForm, ReportFileForm
 from .helper import get_analytics, compress_to_zip, get_hash, queryToCsv, hashPassword, verifyPassword
 from .models import UploadFiles, Analytics
 
@@ -153,3 +153,17 @@ def analytic_link_handle(request, analytic_link):
                        "link": analytic_link})
     else:
         raise Http404()
+
+
+def report_link(request, public_link):
+    if request.method == "POST":
+        form = ReportFileForm(request.POST)
+        if form.is_valid():
+            model = form.save(commit=False)
+            model.public_link = get_object_or_404(UploadFiles, pk=public_link)
+            model.save()
+            return render(request, "report_link.success.html", )
+    else:
+        # GET request
+        form = ReportFileForm()
+        return render(request, "report_link.html", {"report_form": form, })
