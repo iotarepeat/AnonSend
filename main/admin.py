@@ -1,13 +1,19 @@
 # Register your models here.
-from django.contrib.admin import AdminSite
+from django.contrib import admin
 
-from .models import UploadFiles, Analytics
-
-
-class MyAdminSite(AdminSite):
-    site_header = 'AnonSend Administration'
+from .models import UploadFile, Analytic, ReportLink
 
 
-admin_site = MyAdminSite(name='admin_site')
-admin_site.register(UploadFiles)
-admin_site.register(Analytics)
+@admin.register(UploadFile)
+class UploadFilesAdmin(admin.ModelAdmin):
+    list_display = ('public_link', 'analytic_link', 'file_name', 'expiry')
+
+
+@admin.register(Analytic)
+class AnalyticsAdmin(admin.ModelAdmin):
+    list_display = ('upload_file', 'country', 'time_clicked')
+
+
+@admin.register(ReportLink)
+class ReportLinksAdmin(admin.ModelAdmin):
+    list_display = ('upload_file', 'reason', 'report_time')

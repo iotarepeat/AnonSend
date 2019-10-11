@@ -28,7 +28,7 @@ DATE_CHOICES = [
 
 
 # Create your models here.
-class UploadFiles(models.Model):
+class UploadFile(models.Model):
     # Uniquely random fields
     public_link = models.CharField(max_length=15, primary_key=True, default=gen_link)
     analytic_link = models.CharField(max_length=15, unique=True, default=gen_analytic_link)
@@ -43,9 +43,15 @@ class UploadFiles(models.Model):
     file_hash = models.CharField(max_length=41, )
     file_name = models.CharField(max_length=40)
 
+    def __str__(self):
+        return self.public_link
 
-class Analytics(models.Model):
-    upload_file = models.ForeignKey(UploadFiles, on_delete=models.CASCADE)
+    def expiry(self):
+        return self.expires_at
+
+
+class Analytic(models.Model):
+    upload_file = models.ForeignKey(UploadFile, on_delete=models.CASCADE)
 
     # From user-agent
     os = models.CharField(max_length=40, default="Unknown")
@@ -58,7 +64,8 @@ class Analytics(models.Model):
     time_clicked = models.DateTimeField(auto_now_add=True)
 
 
-class ReportLinks(models.Model):
-    public_link = models.ForeignKey(UploadFiles, on_delete=models.CASCADE)
+class ReportLink(models.Model):
+    upload_file = models.ForeignKey(UploadFile, on_delete=models.CASCADE)
     reason = models.CharField(max_length=10, choices=REPORT_CHOICES, default=REPORT_CHOICES[0])
-    description = models.CharField(max_length=150)
+    description = models.TextField(max_length=150)
+    report_time = models.DateTimeField(auto_now_add=True)

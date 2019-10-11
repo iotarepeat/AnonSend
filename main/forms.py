@@ -2,12 +2,12 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from main.helper import verifyPassword
-from .models import UploadFiles, ReportLinks
+from .models import UploadFile, ReportLink
 
 
 class UploadFileForm(forms.ModelForm):
     class Meta:
-        model = UploadFiles
+        model = UploadFile
         fields = ('file', 'expires_at', 'max_downloads', 'password')
         widgets = {
             'file': forms.ClearableFileInput(attrs={"multiple": True}),
@@ -17,9 +17,9 @@ class UploadFileForm(forms.ModelForm):
 
 class ReportFileForm(forms.ModelForm):
     class Meta:
-        model = ReportLinks
+        model = ReportLink
         fields = '__all__'
-        exclude = ['public_link']
+        exclude = ['upload_file']
         widgets = {
             'reason': forms.RadioSelect(),
             'description': forms.Textarea(attrs={"rows": 5, "cols": ""})
@@ -35,7 +35,7 @@ class PasswordForm(forms.ModelForm):
         super(PasswordForm, self).__init__(*args, **kwargs)
 
     class Meta:
-        model = UploadFiles
+        model = UploadFile
         fields = ('password',)
         widgets = {
             'password': forms.PasswordInput(),

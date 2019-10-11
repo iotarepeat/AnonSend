@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import UploadFileForm, PasswordForm, ReportFileForm
 from .helper import get_analytics, compress_to_zip, get_hash, queryToCsv, hashPassword, verifyPassword
-from .models import UploadFiles, Analytics
+from .models import UploadFile, Analytic
 
 
 # Create your views here.
@@ -46,12 +46,12 @@ def uploaded_link(request):
                 # Single file
                 file = request.FILES['file']
             # Set defaults for models and also store data retrieved from forms
-            model = UploadFiles(file=file, file_name=file.name, file_hash=get_hash(file),
-                                password=hashPassword(form.cleaned_data['password']),
-                                expires_at=form.cleaned_data['expires_at'],
-                                max_downloads=form.cleaned_data['max_downloads'])
+            model = UploadFile(file=file, file_name=file.name, file_hash=get_hash(file),
+                               password=hashPassword(form.cleaned_data['password']),
+                               expires_at=form.cleaned_data['expires_at'],
+                               max_downloads=form.cleaned_data['max_downloads'])
             # Check for same file with hash
-            query_set = UploadFiles.objects.all().filter(file_hash=model.file_hash)
+            query_set = UploadFile.objects.all().filter(file_hash=model.file_hash)
             if query_set.exists():
                 """ 
                 Match found, no need to save
@@ -87,15 +87,15 @@ def public_link_handle(request, public_link):
     - If password is blank, set to visibility to false i.e hide password field
     - If password is invalid, prompt via messages
     - Finally verify constraints (max_downloads and expiry_at)
-    - If within constraints, store info to Analytics model and serve the file
+    - If within constraints, store info to Analytic model and serve the file
 
     :type public_link: str
     :param request:
     :param public_link: Uniquely generated public link
     :return: public_link.html
     """
-    upload_file = get_object_or_404(UploadFiles, pk=public_link)
-    download_count = len(Analytics.objects.filter(upload_file=upload_file))
+    upload_file = get_object_or_404(UploadFile, pk=public_link)
+    download_count = len(Analytic.objects.filter(upload_file=upload_file))
     expires_at = upload_file.expires_at.timestamp()
     current_time = datetime.now().timestamp()
     if download_count <= upload_file.max_downloads and expires_at > current_time:
@@ -104,7 +104,7 @@ def public_link_handle(request, public_link):
 
             if form.is_valid():
                 results = get_analytics(request.META)
-                Analytics(upload_file_id=public_link, **results).save()
+                Analytic(upload_file_id=public_link, **results).save()
                 return FileResponse(upload_file.file, as_attachment=True, filename=upload_file.file_name)
             else:
                 return render(request, 'public_link.html',
@@ -121,9 +121,9 @@ def public_link_handle(request, public_link):
 
 
 def downloadAsCsv(request, analytic_link):
-    query = UploadFiles.objects.all().filter(analytic_link=analytic_link)
+    query = UploadFile.objects.all().filter(analytic_link=analytic_link)
     if query.exists() and query.first().expires_at.timestamp() > datetime.now().timestamp():
-        results = Analytics.objects.filter(upload_file=query.first()).order_by('-time_clicked')
+        results = Analytic.objects.filter(upload_file=query.first()).order_by('-time_clicked')
         fname = queryToCsv(results);
         return FileResponse(open(fname, 'rb'), as_attachment=True, filename="Anonsend_analytics.csv")
     else:
@@ -142,9 +142,9 @@ def analytic_link_handle(request, analytic_link):
     :param analytic_link:
     :return:
     """
-    query = UploadFiles.objects.all().filter(analytic_link=analytic_link)
+    query = UploadFile.objects.all().filter(analytic_link=analytic_link)
     if query.exists() and query.first().expires_at.timestamp() > datetime.now().timestamp():
-        results = Analytics.objects.filter(upload_file=query.first()).order_by('-time_clicked')
+        results = Analytic.objects.filter(upload_file=query.first()).order_by('-time_clicked')
         device_type = Counter([x for i in list(results.values_list('device_type')) for x in i]).items()
         browser = Counter([x for i in list(results.values_list('browser')) for x in i]).items()
         country = Counter([x for i in list(results.values_list('country')) for x in i]).items()
@@ -160,7 +160,7 @@ def report_link(request, public_link):
         form = ReportFileForm(request.POST)
         if form.is_valid():
             model = form.save(commit=False)
-            model.public_link = get_object_or_404(UploadFiles, pk=public_link)
+            model.upload_file = get_object_or_404(UploadFile, pk=public_link)
             model.save()
             return render(request, "report_link.success.html", )
     else:

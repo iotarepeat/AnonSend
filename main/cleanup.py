@@ -7,7 +7,7 @@ import django
 
 django.setup()
 
-from main.models import UploadFiles
+from main.models import UploadFile
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(__file__))
 UPLOAD_FOLDER = 'uploaded_files'
@@ -25,7 +25,7 @@ if __name__ == '__main__':
             
     """
     os.chdir(PROJECT_DIR)
-    query = UploadFiles.objects.filter(expires_at__gte=datetime.now())
+    query = UploadFile.objects.filter(expires_at__gte=datetime.now())
     whiteList = {x for i in
                  list(query.values_list('file')) for x in
                  i}
@@ -39,4 +39,4 @@ if __name__ == '__main__':
         if not os.listdir(folder):
             os.rmdir(folder)
 
-    UploadFiles.objects.filter(expires_at__lte=datetime.now()).delete()
+    UploadFile.objects.filter(expires_at__lte=datetime.now()).delete()
