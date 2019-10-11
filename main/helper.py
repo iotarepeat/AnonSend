@@ -25,6 +25,21 @@ def hashPassword(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 
+def getQuestions():
+    """
+    Load questions from questions.json and return it
+    :return: Dictionary of questions
+    :rtype: dict
+    """
+    if not os.path.exists("questions.json"):
+        print("WARNING: No questions.json found")
+        return {"": ""}
+
+    else:
+        with open("questions.json", "r") as f:
+            return json.load(f)
+
+
 def verifyPassword(password, hashed):
     """
     Verify password, blank or hashed

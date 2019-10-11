@@ -1,0 +1,11 @@
+{
+  "Do you look at my files?": "No, we don't open what you send.",
+  "Which file extensions do accept?": " All file extensions are allowed, except for hidden files (files starting with a '.').",
+  "Can I upload a directory or folder?": " No, you have to select the files in the particular folder for uploading",
+  "What is the maximum size allowed for a file or a transfer?": "Currently there is no limit ,but we would not recommend uploading more than 2gb of file",
+  "Do multiple file upload have different download links?": "No, for the convenience of the user multiple files are compressed by us.",
+  "Do I need to install software to download files?": "Available directly from your browser (Chrome, Firefox,..) without any software installation.",
+  "The files were downloaded successfully, but I can't find them.": "They can be in your download folder (Downloads) or on your desktop. If you still do not find, use the search function on your computer.",
+  "How long do files stay uploaded?": "As long as your set the Expiration Time (default = 10min) for the file you uploaded. Your files are stored online for the duration of the time specified, or until it reaches the maximum specified download limit whichever comes first. After that, those files are removed automatically.",
+  "How safe are my files?": "Your files are in safe hands, we never touch them, and only person with a link to the file can download it in case when no password is set , if a password is set the person will require both the download link and the password"
+}

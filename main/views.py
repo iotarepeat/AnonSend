@@ -1,12 +1,11 @@
 from collections import Counter
-from datetime import datetime
 
 from django.core.files.uploadedfile import UploadedFile
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import UploadFileForm, PasswordForm, ReportFileForm
-from .helper import get_analytics, compress_to_zip, get_hash, queryToCsv, hashPassword, verifyPassword
+from .helper import *
 from .models import UploadFile, Analytic
 
 
@@ -167,3 +166,7 @@ def report_link(request, public_link):
         # GET request
         form = ReportFileForm()
         return render(request, "report_link.html", {"report_form": form, })
+
+
+def faq(request):
+    return render(request, 'faq.html', {"questions": getQuestions()})
