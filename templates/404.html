@@ -5,15 +5,20 @@
     {% load static %}
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link type="text/css" rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 </head>
 
-<body class="text-center text-dark bg-light">
+<body class="container-login100 d-block ">
+{% include 'header.html' %}
+<div class="container-login100 justify-content-center">
 
-<div class="p-5">
-    <img src="{% static "images/404.svg" %}" class="w-50" alt="404 Image">
-    <h1 class="mt-2">Page not found</h1>
-    <h5 class="mt-2">The resource you are looking for has expired or does not exist.</h5>
-    <a class="btn btn-primary btn-lg mt-2" href="/">Go to Homepage</a>
+    <div class="wrap-login100 justify-content-center">
+        <img src="{% static "images/404.svg" %}" class="w-50">
+        <span class="login100-form-title my-2">Page not found</span>
+        <h5 class="my-2">The resource you are looking for has expired or does not exist.</h5>
+        <a class="login100-form-btn my-2" href="/">Go to Homepage</a>
+    </div>
 </div>
 </body>
 
