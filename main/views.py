@@ -8,8 +8,17 @@ from .forms import UploadFileForm, PasswordForm, ReportFileForm
 from .helper import *
 from .models import UploadFile, Analytic
 
+# 2.5MB - 2621440
+# 5MB - 5242880
+# 10MB - 10485760
+# 20MB - 20971520
+# 50MB - 5242880
+# 100MB - 104857600
+# 250MB - 214958080
+# 500MB - 429916160
+MAX_UPLOAD_SIZE = 104857600
 
-# Create your views here.
+
 def index(request):
     """
     Displays the front page
@@ -44,6 +53,8 @@ def uploaded_link(request):
             else:
                 # Single file
                 file = request.FILES['file']
+            if file.size > MAX_UPLOAD_SIZE:
+                return render(request, 'size_limit.html')
             # Set defaults for models and also store data retrieved from forms
             model = UploadFile(file=file, file_name=file.name, file_hash=get_hash(file),
                                password=hashPassword(form.cleaned_data['password']),
