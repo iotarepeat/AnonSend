@@ -1,8 +1,26 @@
+import datetime
+
 from django import forms
 from django.core.exceptions import ValidationError
 
 from main.helper import verifyPassword
 from .models import UploadFile, ReportLink
+
+
+def get_today():
+    """
+    :return: Get current time
+    """
+    return datetime.datetime.now()
+
+
+DATE_CHOICES = [
+    (lambda: get_today() + datetime.timedelta(minutes=10), "10 Minutes"),
+    (lambda: get_today() + datetime.timedelta(days=1), "1 Day"),
+    (lambda: get_today() + datetime.timedelta(days=3), "3 Days"),
+    (lambda: get_today() + datetime.timedelta(weeks=1), "1 Week"),
+    (lambda: get_today() + datetime.timedelta(weeks=2), "2 Weeks"),
+]
 
 
 class UploadFileForm(forms.ModelForm):
@@ -12,6 +30,7 @@ class UploadFileForm(forms.ModelForm):
         widgets = {
             'file': forms.ClearableFileInput(attrs={"multiple": True}),
             'password': forms.PasswordInput(),
+            'expires_at': forms.Select(choices=DATE_CHOICES)
         }
 
 

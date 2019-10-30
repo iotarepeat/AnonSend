@@ -1,16 +1,6 @@
-import datetime
-
 from django.db import models
 
 from main.helper import gen_link, gen_analytic_link
-
-
-def get_today():
-    """
-    :return: Get current time
-    """
-    return datetime.datetime.now()
-
 
 REPORT_CHOICES = [
     ("malicious", "Malicious file"),
@@ -18,16 +8,7 @@ REPORT_CHOICES = [
     ("dmca", "DMCA violation"),
 ]
 
-DATE_CHOICES = [
-    (get_today() + datetime.timedelta(minutes=10), "10 Minutes"),
-    (get_today() + datetime.timedelta(days=1), "1 Day"),
-    (get_today() + datetime.timedelta(days=3), "3 Days"),
-    (get_today() + datetime.timedelta(weeks=1), "1 Week"),
-    (get_today() + datetime.timedelta(weeks=2), "2 Weeks"),
-]
 
-
-# Create your models here.
 class UploadFile(models.Model):
     # Uniquely random fields
     public_link = models.CharField(max_length=15, primary_key=True, default=gen_link)
@@ -36,7 +17,7 @@ class UploadFile(models.Model):
     # Form inputs
     file = models.FileField(upload_to="uploaded_files/")
     password = models.CharField(max_length=100, blank=True)
-    expires_at = models.DateTimeField(verbose_name="Expires in", choices=DATE_CHOICES, default=DATE_CHOICES[0])
+    expires_at = models.DateTimeField(verbose_name="Expires in")
     max_downloads = models.PositiveSmallIntegerField(default=1, choices=[(i, i) for i in range(1, 11)])
 
     # Derived fields
