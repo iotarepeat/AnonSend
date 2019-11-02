@@ -13,6 +13,8 @@
     {% load static %}
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link type="text/css" rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <!-- Chart code -->
     <script>
         function downloadAsCsv() {
@@ -159,8 +161,11 @@
 </head>
 <!-- HTML -->
 <body>
-<div class="container">
 
+<div class="d-flex w-100 p-3">
+    {% include 'header.html' %}
+</div>
+<div class="container">
     <div class="bg-white py-2 px-4 m-3 rounded 2-">
         <div class="row">
             <p class="h2">Geolocation Statistics:</p>
