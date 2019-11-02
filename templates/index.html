@@ -28,7 +28,7 @@
 					</span>
                 <div class="wrap-input100">
                     <h5>{{ form.visible_fields.0.label_tag }}</h5>
-                    {{ form.visible_fields.0|addclass:"form-control-file" }}
+                    <input onchange="validateSize()" type="file" name="file" multiple="" class="form-control-file" required="" id="id_file">
                 </div>
 
                 <div class="wrap-input100">
@@ -57,6 +57,19 @@
 <script src="{% static 'js/tilt.jquery.min.js' %}"> $('.js-tilt').tilt({
     reset: false, scale: 1.1
 })
+</script>
+<script>
+    function validateSize() {
+        const fileElem = document.getElementById('id_file');
+        let total = 0;
+        let f;
+        for (f of fileElem.files) {
+            total += f.size;
+        }
+        if (total > 104857600) {
+            alert("File size limit exceeded");
+        }
+    }
 </script>
 </body>
 </html>
