@@ -108,7 +108,7 @@ def public_link_handle(request, public_link):
     download_count = len(Analytic.objects.filter(upload_file=upload_file))
     expires_at = upload_file.expires_at.timestamp()
     current_time = datetime.now().timestamp()
-    if download_count <= upload_file.max_downloads and expires_at > current_time:
+    if download_count < upload_file.max_downloads and expires_at > current_time:
         if request.method == "POST":
             form = PasswordForm(request.POST, expected_password=upload_file.password)
 
@@ -134,7 +134,7 @@ def downloadAsCsv(request, analytic_link):
     query = UploadFile.objects.all().filter(analytic_link=analytic_link)
     if query.exists() and query.first().expires_at.timestamp() > datetime.now().timestamp():
         results = Analytic.objects.filter(upload_file=query.first()).order_by('-time_clicked')
-        fname = queryToCsv(results);
+        fname = queryToCsv(results)
         return FileResponse(open(fname, 'rb'), as_attachment=True, filename="Anonsend_analytics.csv")
     else:
         raise Http404()
