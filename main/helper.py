@@ -111,7 +111,7 @@ def get_analytics(meta):
     try:
         ip_address = meta['REMOTE_ADDR']
         response = urllib.request.urlopen('https://ipapi.co/' + ip_address + "/json/")
-        ip_info = json.loads(response.read())
+        ip_info = json.loads(response.read().decode('utf-8'))
         country = ip_info["country"]
     except:
         country = "Unknown"
